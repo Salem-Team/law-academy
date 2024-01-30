@@ -45,73 +45,47 @@
               />
             </div>
           </v-text-field>
+          <p
+            class="error"
+            style="
+              width: 100%;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 5px;
+              color: red;
+              font-weight: bold;
+              text-align: center;
+              font-family: system-ui;
+            "
+          >
+            {{ ErrorMsg }}
+          </p>
+          <v-btn
+            :disabled="loading"
+            :loading="loading"
+            type="submit"
+            block
+            class="mt-hover-0"
+            style="
+              color: var(--main-color);
+              font-weight: bold;
+              font-size: 20px;
+              padding: 10px;
+              background: #fafafa;
+              width: 100%;
+              text-align: center;
+              font-family: system-ui;
+              border-radius: 5px;
+              border: 1px solid var(--main-color);
+            "
+            size="x-large"
+            variant="flat"
+            @click="SignIn"
+          >
+            تسجيل الدخول
+          </v-btn>
         </v-form>
       </v-sheet>
-      <!-- <div class="input-group mb-3"> -->
-      <!-- <div class="form-floating">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="number"
-            v-model="number"
-          />
-
-          <label for="number"
-            ><font-awesome-icon :icon="['fas', 'user-edit']" /> رقم
-            الهاتف</label
-          >
-        </div> -->
-      <!-- </div> -->
-      <!-- <div class="input-group mb-3">
-        <div class="form-floating">
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            class="form-control"
-            placeholder="كلمة السر"
-            v-model="password"
-            required
-          />
-          <label for="Password"
-            ><font-awesome-icon :icon="['fas', 'lock']" /> كلمة السر
-          </label>
-          <div
-            class="Show_Password absolute -translate-x-1/2 -translate-y-1/2 left-5 top-1/2"
-            @click="showPassword = !showPassword"
-          >
-            <font-awesome-icon
-              :icon="showPassword ? ['fas', 'eye-slash'] : ['fas', 'eye']"
-            />
-          </div>
-        </div>
-      </div> -->
-      <p
-        class="error"
-        style="
-          width: 100%;
-          padding: 10px;
-          background: #fafafa;
-          border-radius: 5px;
-          color: red;
-          font-weight: bold;
-          text-align: center;
-          font-family: system-ui;
-        "
-      >
-        {{ ErrorMsg }}
-      </p>
-      <div
-        @click="SignIn"
-        class="w-fit mr-auto p-2.5 text-white bg-[--main-color] rounded cursor-pointer"
-        style="
-          width: 100%;
-          text-align: center;
-          font-weight: bold;
-          font-family: system-ui;
-          margin-top: 10px;
-        "
-      >
-        تسجيل الدخول
-      </div>
     </form>
   </div>
 </template>
@@ -122,6 +96,8 @@ import {
   where,
   getDocs,
   getFirestore,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
@@ -136,7 +112,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 import bcrypt from "bcryptjs";
-// import Main_ClassVue from "@/views/Main_Class.vue";
 export default {
   name: "SignIn",
   emits: ["close_1"],
@@ -147,6 +122,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       Phone: "",
       number: null,
       loginError: "",
@@ -203,133 +179,62 @@ export default {
         MainState = true;
       }
       // Check About password
+      let UserState;
       if (MainState) {
-        const q_2 = query(
-          collection(db, "المشرفين"),
-          where("Password", "==", this.password.toString())
-        );
-        const querySnapshot_2 = await getDocs(q_2);
-        const q_3 = query(
-          collection(db, "الطلاب"),
-          where("password", "==", this.password.toString())
-        );
-        const querySnapshot_3 = await getDocs(q_3);
-        if (querySnapshot_2.empty && querySnapshot_3.empty) {
-          this.ErrorMsg = "كلمة المرور خاطئة";
-          MainState = false;
+        let docRef;
+        if (!querySnapshot.empty) {
+          docRef = doc(db, "المشرفين", querySnapshot.docs[0].id);
+          UserState = "Admin";
+        } else if (!querySnapshot_1.empty) {
+          docRef = doc(db, "الطلاب", querySnapshot_1.docs[0].id);
+          UserState = "Student";
+        }
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          // hashing password
+          const hashedPassword = docSnap.data().password;
+
+          bcrypt.compare(
+            this.password.toString(),
+            hashedPassword,
+            (err, result) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              if (result) {
+                console.log("تم التحقق بنجاح");
+                this.ErrorMsg = "";
+                MainState = true;
+              } else {
+                console.log("فشل التحقق");
+                this.ErrorMsg = "كلمة المرور خاطئة";
+                MainState = false;
+              }
+            }
+          );
         } else {
-          this.ErrorMsg = "";
-          MainState = true;
+          console.log("No such document!");
         }
       }
-      //
-      if (MainState) {
-        localStorage.setItem(
-          "userid",
-          querySnapshot.docs[0].id || querySnapshot_1.docs[0].id
-        );
-        this.$emit("GetAdminState");
-        this.$emit("close_1");
-      }
-    },
-    async State() {
-      try {
-        const q_Admin = query(
-          collection(db, "المشرفين"),
-          where("Id", "==", localStorage.getItem("userid"))
-        );
-        const querySnapshot_Admin = await getDocs(q_Admin);
-        if (!querySnapshot_Admin.empty) {
-          this.$store.commit("setUserAdmin", "Admin");
-        } else {
-          this.$store.commit("setUserAdmin", "");
+      setTimeout(() => {
+        if (MainState) {
+          this.loading = !this.loading;
+          if (UserState === "Admin") {
+            localStorage.setItem("userid", querySnapshot.docs[0].id);
+          } else if (UserState === "Student") {
+            localStorage.setItem("userid", querySnapshot_1.docs[0].id);
+          }
+          setTimeout(() => {
+            this.$emit("GetAdminState");
+            this.$emit("CheckAboutUserState");
+            this.$emit("close_1");
+          }, 500);
         }
-      } catch (error) {
-        error;
-      }
-      try {
-        const q_User = query(
-          collection(db, "الطلاب"),
-          where("userid", "==", localStorage.getItem("userid"))
-        );
-        const querySnapshot_User = await getDocs(q_User);
-        if (!querySnapshot_User.empty) {
-          this.$store.commit("setUserAdmin", "User");
-        } else {
-          this.$store.commit("setUserAdmin", "");
-        }
-      } catch (error) {
-        error;
-      }
+      }, 500);
     },
     close_1() {
       this.$emit("close_1");
-    },
-
-    async login(event) {
-      event.preventDefault();
-      console.log("mmmmmm");
-      try {
-        const q_Admin = query(
-          collection(db, "المشرفين"),
-          where("phone", "==", this.number)
-        );
-        const querySnapshot_Admin = await getDocs(q_Admin);
-        querySnapshot_Admin.forEach((doc) => {
-          const user = doc.data();
-          const isPasswordCorrect_Admin = bcrypt.compareSync(
-            this.password,
-            user.Password
-          );
-
-          if (isPasswordCorrect_Admin) {
-            localStorage.setItem("userphone", user.phone);
-            localStorage.setItem("userid", doc.id);
-            localStorage.setItem("username_1", user.Name);
-            this.loginError = "";
-            this.number = "";
-            this.password = "";
-            this.$emit("close_1");
-            setTimeout(() => {
-              this.State();
-            }, 100);
-          } else {
-            this.loginError = "بيانات تسجيل الدخول غير صحيحة !";
-          }
-        });
-        const q = query(
-          collection(db, "الطلاب"),
-          where("phone", "==", this.number)
-        );
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          const user = doc.data();
-          const isPasswordCorrect = bcrypt.compareSync(
-            this.password,
-            user.password
-          );
-          if (isPasswordCorrect) {
-            this.username = user.name;
-            this.useremail = user.number;
-            localStorage.setItem("username_1", user.name_1);
-            localStorage.setItem("username_2", user.name_2);
-            localStorage.setItem("username_3", user.name_3);
-            localStorage.setItem("userid", doc.id);
-            this.loginError = "";
-            this.number = "";
-            this.password = "";
-            this.$emit("close_1");
-            setTimeout(() => {
-              this.State();
-              this.$emit("GetAdminState");
-            }, 100);
-          } else {
-            this.loginError = "بيانات تسجيل الدخول غير صحيحة !";
-          }
-        });
-      } catch (error) {
-        this.loginError = "حدث خطأ أثناء تسجيل الدخول!";
-      }
     },
   },
 };

@@ -22,9 +22,6 @@
       <div class="left flex items-center gap-2.5 flex-wrap">
         <div class="links relative hidden">
           <div class="all_links flex gap-2.5 rounded p-2.5">
-            <!-- <span class="cursor-pointer border-b border-gray-300 pb-2.5"
-              >أحدث الأخبار</span
-            > -->
             <span class="cursor-pointer border-b border-gray-300 pb-2.5"
               >الفرق الدراسية</span
             >
@@ -34,8 +31,6 @@
             <span class="cursor-pointer">تواصل معنا</span>
           </div>
         </div>
-
-        <!-- <font-awesome-icon :icon="['fas', 'magnifying-glass']" /> -->
 
         <div v-if="UserState" class="Sign_In">
           <v-menu transition="slide-y-transition">
@@ -80,7 +75,7 @@
                           cursor: pointer;
                         "
                         class="hover-0"
-                        v-if="UserAdmin === 'User'"
+                        v-if="ShowBtnToUser === 'Student'"
                       >
                         <router-link to="/TheUser">
                           <v-list-item-title
@@ -103,7 +98,7 @@
                           cursor: pointer;
                         "
                         class="hover-0"
-                        v-if="UserAdminState"
+                        v-if="ShowBtnToUser === 'Admin'"
                       >
                         <router-link to="/AdminPage"
                           ><v-list-item-title
@@ -128,15 +123,17 @@
                         @click="SignOut"
                         class="hover-0"
                       >
-                        <v-list-item-title
-                          class="flex align-center gap-1.5"
-                          style="color: var(--main-color)"
-                        >
-                          <font-awesome-icon
-                            :icon="['fas', 'arrow-right-to-bracket']"
-                          />
-                          <span class="cursor-pointer"> تسجيل خروج </span>
-                        </v-list-item-title>
+                        <router-link to="/">
+                          <v-list-item-title
+                            class="flex align-center gap-1.5"
+                            style="color: var(--main-color)"
+                          >
+                            <font-awesome-icon
+                              :icon="['fas', 'arrow-right-to-bracket']"
+                            />
+                            <span class="cursor-pointer"> تسجيل خروج </span>
+                          </v-list-item-title>
+                        </router-link>
                       </div>
                     </div>
                     <div
@@ -223,6 +220,7 @@
     @close_1="close_1"
     v-if="close_1_State"
     @GetAdminState="GetAdminState"
+    @CheckAboutUserState="CheckAboutUserState"
   />
   <TheRegister @close_2="close_2" v-if="close_2_State" />
 </template>
@@ -235,6 +233,8 @@ import {
   where,
   getDocs,
   getFirestore,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
@@ -253,6 +253,7 @@ export default {
   emits: ["State"],
   mounted() {
     this.UserStateFunction();
+    this.CheckAboutUserState();
     setTimeout(() => {
       this.GetAdminState();
     }, 10);
@@ -271,6 +272,7 @@ export default {
       thetype: "",
       visitorCount: null,
       UserAdminState: null,
+      ShowBtnToUser: null,
     };
   },
   components: {
@@ -283,6 +285,44 @@ export default {
     },
   },
   methods: {
+    async CheckAboutUserState() {
+      // ShowBtnToUser
+      try {
+        const q_Admin = query(
+          collection(db, "المشرفين"),
+          where("userid", "==", localStorage.getItem("userid"))
+        );
+        const querySnapshot_Admin = await getDocs(q_Admin);
+        if (!querySnapshot_Admin.empty) {
+          // Check About Powers
+
+          const docRef = doc(db, "المشرفين", localStorage.getItem("userid"));
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            if (docSnap.data().powers === "الكل") {
+              this.ShowBtnToUser = "Admin";
+            }
+          } else {
+            console.log("No such document!");
+          }
+        }
+      } catch (error) {
+        error;
+      }
+      try {
+        const q_User = query(
+          collection(db, "الطلاب"),
+          where("userid", "==", localStorage.getItem("userid"))
+        );
+        const querySnapshot_User = await getDocs(q_User);
+        if (!querySnapshot_User.empty) {
+          this.ShowBtnToUser = "Student";
+        }
+      } catch (error) {
+        error;
+      }
+    },
     async GetAdminState() {
       if (this.UserAdmin === "Admin") {
         const querySnapshot = await getDocs(collection(db, "المشرفين"));
@@ -310,10 +350,7 @@ export default {
     },
     async TheState() {
       try {
-        const q_Admin = query(
-          collection(db, "المشرفين"),
-          where("Id", "==", localStorage.getItem("userid"))
-        );
+        const q_Admin = query(collection(db, "المشرفين"), where("Id", "=="));
         const querySnapshot_Admin = await getDocs(q_Admin);
         if (!querySnapshot_Admin.empty) {
           this.$store.commit("setUserAdmin", "Admin");

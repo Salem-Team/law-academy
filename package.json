@@ -13,6 +13,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.5",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.34.0",
     "firebase": "^10.7.2",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@types/bcryptjs": "^2.4.6",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",

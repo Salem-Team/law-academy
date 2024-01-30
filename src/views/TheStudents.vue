@@ -1,243 +1,232 @@
 <template>
-  <div class="container TheStudents CC">
-    <nav
-      aria-label="breadcrumb"
-      class="nav_1 flex items-center justify-between"
-    >
-      <nav aria-label="breadcrumb">
+  <div class="TheStudents" style="margin-top: -20px; padding-bottom: 50px">
+    <div class="container relative" style="padding-top: 160px">
+      <nav class="mb-2.5" aria-label="breadcrumb">
         <MDBBreadcrumb>
-          <MDBBreadcrumbItem
-            ><router-link to="/AdminPage"
-              >الإشراف</router-link
-            ></MDBBreadcrumbItem
-          >
+          <MDBBreadcrumbItem>{{ Type }} / </MDBBreadcrumbItem>
+          <MDBBreadcrumbItem>{{ Lang }} / </MDBBreadcrumbItem>
 
-          <MDBBreadcrumbItem active> / الطلاب</MDBBreadcrumbItem>
+          <MDBBreadcrumbItem active> {{ Class }}</MDBBreadcrumbItem>
         </MDBBreadcrumb>
-      </nav>
-      <div
-        @click="CloseAndOpenAddSub"
-        class="flex items-center gap-2.5 p-2.5 bg-[#fff] rounded cursor-pointer hover-0"
-        v-if="UserAdmin === 'Admin'"
-        style="
-          border: 1px solid var(--main-color);
-          margin: 10px;
-          color: var(--main-color);
-          font-weight: bold;
-          font-size: 14px;
-        "
-      >
-        <font-awesome-icon :icon="['fas', 'plus']" />
-        <span>أضف مادة</span>
-      </div>
-    </nav>
-    <div class="contain flex">
-      <div class="right w-2/5">
-        <v-card class="mx-auto" width="100%">
-          <v-card-title
-            style="padding: 10px"
-            class="text-h6 font-weight-regular justify-space-between mb-2.5"
-          >
-            <v-avatar v-text="step"></v-avatar>
-            <span
-              style="font-size: 20px; font-weight: bold; font-family: system-ui"
-              >{{ currentTitle }}</span
-            >
-          </v-card-title>
-
-          <v-window v-model="step">
-            <v-window-item :value="1">
-              <div
-                class="selecte_1 flex justify-center gap-2.5 flex-wrap selecte"
-              >
-                <span
-                  class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
-                  @click="select_1"
-                  >كلية الشريعة و القانون</span
-                >
-                <span
-                  class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
-                  @click="select_1"
-                  >معهد أعوان القضاء</span
-                >
-              </div>
-            </v-window-item>
-
-            <v-window-item :value="2">
-              <div
-                class="selecte_2 flex justify-center gap-2.5 flex-wrap selecte"
-              >
-                <span
-                  @click="select_2"
-                  class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
-                  >عربي</span
-                >
-                <span
-                  @click="select_2"
-                  class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
-                  >English</span
-                >
-              </div>
-            </v-window-item>
-
-            <v-window-item :value="3">
-              <div class="selecte_3 flex justify-center gap-2.5 flex-wrap">
-                <a
-                  v-for="Class in classes"
-                  :key="Class"
-                  class="border-gray-300 border rounded flex justify-center items-center w-23 p-10 cursor-pointer hover_color_border"
-                >
-                  {{ Class }}
-                </a>
-              </div>
-            </v-window-item>
-          </v-window>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-btn
-              v-if="step > 1"
-              variant="text"
-              @click="step--"
-              style="
-                color: var(--main-color);
-                border: 1px solid var(--main-color);
-              "
-            >
-              السابق
-            </v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </div>
-      <div class="left w-3/5">
-        <nav aria-label="breadcrumb">
-          <MDBBreadcrumb>
-            <MDBBreadcrumbItem>{{ Type }} / </MDBBreadcrumbItem>
-            <MDBBreadcrumbItem>{{ Lang }} / </MDBBreadcrumbItem>
-
-            <MDBBreadcrumbItem active> {{ Class }}</MDBBreadcrumbItem>
-          </MDBBreadcrumb>
-        </nav>
-        <div>عدد الطلاب : {{ Students.length }}</div>
-        <div>عدد البنات : {{ Female.length }}</div>
-        <div>عدد الأولاد : {{ Male.length }}</div>
-        <input
-          v-model="searchInput"
-          @input="searchNames"
-          placeholder="ابحث في الأسماء"
-          class="border w-100 p-2.5"
-        />
-
-        <div class="content flex">
-          <img
-            src="../assets/animation_loia37xm_small.gif"
-            alt=""
-            v-if="showDownloadIcon"
-            class="m-auto"
+        <div style="display: flex; align-items: center; gap: 10px">
+          <font-awesome-icon
+            :icon="['fas', 'sliders']"
+            style="background: #fafafa; padding: 10px; border-radius: 5px"
           />
-          <div
-            class="box border p-2.5"
-            v-for="(Student, index) in Students"
-            :key="Student"
-          >
-            <div class="num">{{ index + 1 }}</div>
-            <div class="flex">
-              <div class="name">{{ Student.Name }}</div>
-              <div class="flex flex-col justify-between items-center">
-                <div class="AllResults">{{ Student.AllResults || 0 }}%</div>
-                <div>متوسط النتائج</div>
-              </div>
-            </div>
-            <div class="flex justify-between">
-              <div
-                class="button border p-2.5 cursor-pointer"
-                @click="GetBIll(index)"
+          <font-awesome-icon
+            :icon="['fas', 'magnifying-glass']"
+            style="background: #fafafa; padding: 10px; border-radius: 5px"
+          />
+        </div>
+      </nav>
+      <div class="contain flex">
+        <div class="right w-2/5">
+          <v-card class="mx-auto" width="100%">
+            <v-card-title
+              style="padding: 10px"
+              class="text-h6 font-weight-regular justify-space-between mb-2.5"
+            >
+              <v-avatar :v-text="step"></v-avatar>
+              <span
+                style="
+                  font-size: 20px;
+                  font-weight: bold;
+                  font-family: system-ui;
+                "
+                >{{ currentTitle }}</span
               >
-                الفواتير
-              </div>
-              <div
-                class="button border p-2.5 cursor-pointer"
-                @click="GetResult(index)"
-              >
-                النتائج
-              </div>
-            </div>
-          </div>
-          <div class="main_Overlay" v-if="BIllShow" style="z-index: 101"></div>
-          <div
-            class="main_Overlay"
-            v-if="ResultShow"
-            style="z-index: 101"
-          ></div>
-          <div
-            class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-            style="z-index: 101"
-            v-if="BIllShow"
-          >
-            <div>
-              <font-awesome-icon
-                :icon="['fas', 'xmark']"
-                @click="BIllShowFunction"
-              />
-            </div>
-            <div class="BIll border p-2.5" v-for="bill in BIll" :key="bill">
-              <div>الدراسة : {{ bill.BillType }}</div>
-              <div>القسم : {{ bill.BillLang }}</div>
-              <div>الفرقة : {{ bill.BillClass }}</div>
-              <div>الصنف : {{ bill.BillItem }}</div>
-              <div>السعر : {{ +bill.BillPrice / 100 }}</div>
-              <div>المادة : {{ bill.BillName }}</div>
-              <div>كود الإستلام : {{ bill.order_id }}</div>
-              <div>
-                تاريخ الدفع :
-                {{
-                  new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-                    weekday: "short",
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                }}
-              </div>
-            </div>
-          </div>
-          <div
-            class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-            v-if="ResultShow"
-            style="z-index: 101"
-          >
-            <div>
-              <font-awesome-icon
-                :icon="['fas', 'xmark']"
-                @click="ResultShowFunction"
-              />
-            </div>
-            <div class="BIll border p-2.5" v-for="bill in Result" :key="bill">
-              <div>الدراسة : {{ bill.Type }}</div>
-              <div>القسم : {{ bill.Lang }}</div>
-              <div>الفرقة : {{ bill.Class }}</div>
-              <div>المادة : {{ bill.Sub }}</div>
+            </v-card-title>
 
-              <div>اختبار رقم ({{ bill.TestNumber }})</div>
-              <div>التقدير : {{ bill.appreciation }}</div>
-              <div>النسبة المؤية : {{ bill.percent }}%</div>
-              <div>المجموع : {{ bill.result }} / {{ bill.Allresult }}</div>
+            <v-window v-model="step">
+              <v-window-item :value="1">
+                <div
+                  class="selecte_1 flex justify-center gap-2.5 flex-wrap selecte"
+                >
+                  <span
+                    class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
+                    @click="select_1"
+                    >كلية الشريعة و القانون</span
+                  >
+                  <span
+                    class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
+                    @click="select_1"
+                    >معهد أعوان القضاء</span
+                  >
+                </div>
+              </v-window-item>
+
+              <v-window-item :value="2">
+                <div
+                  class="selecte_2 flex justify-center gap-2.5 flex-wrap selecte"
+                >
+                  <span
+                    @click="select_2"
+                    class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
+                    >عربي</span
+                  >
+                  <span
+                    @click="select_2"
+                    class="border-gray-300 border rounded flex justify-center items-center p-10 cursor-pointer hover_color_border"
+                    >English</span
+                  >
+                </div>
+              </v-window-item>
+
+              <v-window-item :value="3">
+                <div class="selecte_3 flex justify-center gap-2.5 flex-wrap">
+                  <a
+                    v-for="Class in classes"
+                    :key="Class"
+                    class="border-gray-300 border rounded flex justify-center items-center w-23 p-10 cursor-pointer hover_color_border"
+                  >
+                    {{ Class }}
+                  </a>
+                </div>
+              </v-window-item>
+            </v-window>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn
+                v-if="step > 1"
+                variant="text"
+                @click="step--"
+                style="
+                  color: var(--main-color);
+                  border: 1px solid var(--main-color);
+                "
+              >
+                السابق
+              </v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </div>
+        <div class="left w-3/5">
+          <div>عدد الطلاب : {{ Students.length }}</div>
+          <div>عدد البنات : {{ Female.length }}</div>
+          <div>عدد الأولاد : {{ Male.length }}</div>
+          <input
+            v-model="searchInput"
+            @input="searchNames"
+            placeholder="ابحث في الأسماء"
+            class="border w-100 p-2.5"
+          />
+
+          <div class="content flex">
+            <img
+              src="../assets/animation_loia37xm_small.gif"
+              alt=""
+              v-if="showDownloadIcon"
+              class="m-auto"
+            />
+            <div
+              class="box border p-2.5"
+              v-for="(Student, index) in Students"
+              :key="Student"
+            >
+              <div class="num">{{ index + 1 }}</div>
+              <div class="flex">
+                <div class="name">{{ Student.Name }}</div>
+                <div class="flex flex-col justify-between items-center">
+                  <div class="AllResults">{{ Student.AllResults || 0 }}%</div>
+                  <div>متوسط النتائج</div>
+                </div>
+              </div>
+              <div class="flex justify-between">
+                <div
+                  class="button border p-2.5 cursor-pointer"
+                  @click="GetBIll(index)"
+                >
+                  الفواتير
+                </div>
+                <div
+                  class="button border p-2.5 cursor-pointer"
+                  @click="GetResult(index)"
+                >
+                  النتائج
+                </div>
+              </div>
+            </div>
+            <div
+              class="main_Overlay"
+              v-if="BIllShow"
+              style="z-index: 101"
+            ></div>
+            <div
+              class="main_Overlay"
+              v-if="ResultShow"
+              style="z-index: 101"
+            ></div>
+            <div
+              class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+              style="z-index: 101"
+              v-if="BIllShow"
+            >
               <div>
-                تاريخ اختبار الطالب :
-                {{
-                  new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-                    weekday: "short",
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                }}
+                <font-awesome-icon
+                  :icon="['fas', 'xmark']"
+                  @click="BIllShowFunction"
+                />
+              </div>
+              <div class="BIll border p-2.5" v-for="bill in BIll" :key="bill">
+                <div>الدراسة : {{ bill.BillType }}</div>
+                <div>القسم : {{ bill.BillLang }}</div>
+                <div>الفرقة : {{ bill.BillClass }}</div>
+                <div>الصنف : {{ bill.BillItem }}</div>
+                <div>السعر : {{ +bill.BillPrice / 100 }}</div>
+                <div>المادة : {{ bill.BillName }}</div>
+                <div>كود الإستلام : {{ bill.order_id }}</div>
+                <div>
+                  تاريخ الدفع :
+                  {{
+                    new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  }}
+                </div>
+              </div>
+            </div>
+            <div
+              class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+              v-if="ResultShow"
+              style="z-index: 101"
+            >
+              <div>
+                <font-awesome-icon
+                  :icon="['fas', 'xmark']"
+                  @click="ResultShowFunction"
+                />
+              </div>
+              <div class="BIll border p-2.5" v-for="bill in Result" :key="bill">
+                <div>الدراسة : {{ bill.Type }}</div>
+                <div>القسم : {{ bill.Lang }}</div>
+                <div>الفرقة : {{ bill.Class }}</div>
+                <div>المادة : {{ bill.Sub }}</div>
+
+                <div>اختبار رقم ({{ bill.TestNumber }})</div>
+                <div>التقدير : {{ bill.appreciation }}</div>
+                <div>النسبة المؤية : {{ bill.percent }}%</div>
+                <div>المجموع : {{ bill.result }} / {{ bill.Allresult }}</div>
+                <div>
+                  تاريخ اختبار الطالب :
+                  {{
+                    new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  }}
+                </div>
               </div>
             </div>
           </div>
@@ -245,7 +234,6 @@
       </div>
     </div>
   </div>
-  <AlarmClock />
 </template>
 <script>
 import { collection, getDocs, getFirestore } from "firebase/firestore";
@@ -262,13 +250,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-import AlarmClock from "../components/AlarmClock.vue";
 export default {
   name: "TheStudents",
-  components: {
-    AlarmClock,
-  },
   mounted() {
+    this.GetData();
     setTimeout(() => {
       this.select();
     }, 10);
@@ -286,9 +271,9 @@ export default {
     },
   },
   data: () => ({
-    Type: "",
-    Lang: "",
-    Class: "",
+    Class: "الفرقة الأولي",
+    Lang: "عربي",
+    Type: "كلية الشريعة و القانون",
     classes: [
       "الفرقة الأولي",
       "الفرقة الثانية",
@@ -394,7 +379,7 @@ export default {
       let theResult;
       const querySnapshot = await getDocs(collection(db, "الطلاب"));
       querySnapshot.forEach((doc) => {
-        let sentence = doc.data().TypeOfClass;
+        let sentence = doc.data().Class;
         let words = sentence.split(" ");
         let firstWord = words[0];
 
@@ -418,11 +403,11 @@ export default {
       let thebill;
       const querySnapshot = await getDocs(collection(db, "الطلاب"));
       querySnapshot.forEach((doc) => {
-        let sentence = doc.data().TypeOfClass;
-        let words = sentence.split(" ");
-        let firstWord = words[0];
+        // let sentence = doc.data().Class;
+        // let words = sentence.split(" ");
+        // let firstWord = words[0];
         if (
-          firstWord === this.Type &&
+          doc.data().Type === this.Type &&
           doc.data().Lang === this.Lang &&
           doc.data().Class === this.Class
         ) {
@@ -439,10 +424,10 @@ export default {
       this.Male = [];
       this.Female = [];
       const querySnapshot = await getDocs(collection(db, "الطلاب"));
+      console.log(this.Type.split(" ")[0]);
       querySnapshot.forEach((doc) => {
-        let sentence = doc.data().TypeOfClass;
         if (
-          sentence === this.Type &&
+          doc.data().Type === this.Type.split(" ")[0] &&
           doc.data().Lang === this.Lang &&
           doc.data().Class === this.Class
         ) {
@@ -464,58 +449,16 @@ export default {
         }
       });
     },
-    // HandelClick() {
-    //   let TypeDevs = document.querySelectorAll(".box .Type");
-    //   let LangDevs = document.querySelectorAll(".Lang ");
-    //   let classDevs = document.querySelectorAll(".Class");
-
-    //   for (let i = 0; i < TypeDevs.length; i++) {
-    //     TypeDevs[i].onclick = () => {
-    //       // this.Type = TypeDevs[i].innerHTML;
-    //       TypeDevs.forEach((e) => {
-    //         e.classList.remove("active");
-    //       });
-    //       TypeDevs[i].classList.add("active");
-    //       LangDevs.forEach((e) => {
-    //         e.classList.remove("hidden");
-    //         e.onclick = () => {
-    //           LangDevs.forEach((e) => {
-    //             e.classList.remove("active");
-    //           });
-    //           e.classList.add("active");
-
-    //           classDevs.forEach((ele) => {
-    //             ele.onclick = () => {
-    //               this.showDownloadIcon = true;
-    //               classDevs.forEach((e) => {
-    //                 e.classList.remove("active");
-    //               });
-
-    //               ele.classList.add("active");
-    //               let sentence =
-    //                 document.querySelector(".box .Type.active").innerHTML;
-    //               let words = sentence.split(" ");
-    //               let firstWord = words[1];
-    //               this.Type = firstWord;
-    //               this.Lang =
-    //                 document.querySelector(".box .Lang.active").innerHTML;
-    //               this.Class =
-    //                 document.querySelector(".box .Class.active").innerHTML;
-    //               setTimeout(() => {
-    //                 this.GetData();
-    //               }, 10);
-    //             };
-    //             ele.classList.remove("hidden");
-    //           });
-    //         };
-    //       });
-    //     };
-    //   }
-    // },
   },
 };
 </script>
 <style lang="scss" scoped>
+.TheStudents {
+  background-image: url("../assets/WhatsApp Image 2023-12-04 at 11.00.58 PM.jpeg");
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
 .v-window-item span,
 .v-window-item a {
   width: 90%;
@@ -526,6 +469,11 @@ nav {
   padding: 15px;
   border-radius: 5px;
   font-size: 14px;
+  font-weight: bold;
+  color: var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   &.nav_1 {
     padding: 0;
     box-shadow: 0 0 10px #ddd;
@@ -548,5 +496,24 @@ nav {
 .active {
   background: var(--main-color);
   color: #fff;
+}
+
+@media (min-width: 1200px) {
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+}
+
+@media (max-width: 767px) {
+  .Main_Class {
+    margin-top: -20px !important;
+    .container {
+      padding-top: 123px !important;
+    }
+  }
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

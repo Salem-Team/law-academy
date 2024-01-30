@@ -67,7 +67,7 @@
         <div
           class="flex items-center gap-2.5 hover-0 p-2.5 cursor-pointer text-center text-xl"
           @click="Add_Img = true"
-          v-if="Admin_Gallery"
+          v-if="ShowBtnToUser === 'Admin'"
           style="
             font-weight: bold;
             border-radius: 5px;
@@ -192,7 +192,14 @@
   </div>
 </template>
 <script>
-import { collection, addDoc, getFirestore, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getFirestore,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyBOlDn6NmPGHHfdY-gYHvnA6MoM-y0Xbmo",
@@ -208,11 +215,16 @@ const db = getFirestore(app);
 export default {
   name: "TheGallary",
   mounted() {
+    setInterval(() => {
+      this.CheckAboutAdminState();
+    }, 1000);
+    this.CheckAboutAdminState();
     setTimeout(() => {
       this.GetAdminState();
     }, 100);
     this.GetData();
   },
+
   computed: {
     UserAdmin() {
       return this.$store.state.UserAdmin;
@@ -234,6 +246,7 @@ export default {
   },
   data() {
     return {
+      ShowBtnToUser: null,
       imges: 4,
       Add_Img: null,
       tab: null,
@@ -260,7 +273,33 @@ export default {
       Admin_Gallery: null,
     };
   },
+  watch: {
+    userid(newValue) {
+      if (newValue === "yTwIh2jjbpHJUpm91z7Y") {
+        console.log("Test Watch");
+      }
+    },
+  },
+
   methods: {
+    async CheckAboutAdminState() {
+      // ShowBtnToUser
+      try {
+        const q_Admin = query(
+          collection(db, "المشرفين"),
+          where("userid", "==", localStorage.getItem("userid"))
+        );
+        const querySnapshot_Admin = await getDocs(q_Admin);
+        if (!querySnapshot_Admin.empty) {
+          // Check About Powers
+          this.ShowBtnToUser = "Admin";
+        } else {
+          this.ShowBtnToUser = "";
+        }
+      } catch (error) {
+        error;
+      }
+    },
     async GetAdminState() {
       if (this.UserAdmin === "Admin") {
         const querySnapshot = await getDocs(collection(db, "المشرفين"));

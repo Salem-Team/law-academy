@@ -144,6 +144,19 @@
               {{ data.phone }}
             </div>
           </div>
+          <span
+            v-if="Data.length === 0"
+            style="
+              width: 100%;
+              background: #fafafa;
+              padding: 10px;
+              border-radius: 5px;
+              text-align: center;
+              font-weight: bold;
+              color: var(--main-color);
+            "
+            >لا يوجد مشرفين</span
+          >
         </div>
       </div>
     </div>
@@ -172,25 +185,26 @@ const db = getFirestore(app);
 import bcrypt from "bcryptjs";
 export default {
   mounted() {
-    this.generateRandomString(7);
+    // this.generateRandomString(7);
     this.GetData();
   },
   data: () => ({
+    AdminState: null,
     ShowLoding: true,
     Name: "",
     Data: [],
     ShowAddAdmin: null,
     firstNameRules: [
       (value) => {
-        if (value?.length > 3) return true;
+        if (value?.length >= 2) return true;
 
-        return "يجب كتابة الإسم";
+        return "يجب أن لا يقل الإسم عن حرفين";
       },
     ],
     phone: "",
     lastNameRules: [
       (value) => {
-        if (value.length === 11) return true;
+        if (value.length >= 11) return true;
 
         return "يجب إدخال رقم صالح";
       },
@@ -198,9 +212,9 @@ export default {
     password: "",
     passRules: [
       (value) => {
-        if (value?.length > 6) return true;
+        if (value?.length >= 4) return true;
 
-        return "يجب ان لا كلمة المرور عن 6 احرف";
+        return "يجب أن لا تقل كلمة المرور عن 4 أحرف";
       },
     ],
     email: "",
@@ -211,7 +225,7 @@ export default {
         return "البريد الإلكتروني غير صحيح";
       },
     ],
-    items: ["الكل", "إضافة الإختبارات & كورسات", "إضافة صور"],
+    items: ["الكل", "إضافة الإختبارات & كورسات"],
   }),
   methods: {
     async GetData() {
@@ -222,6 +236,12 @@ export default {
         this.Data.push(doc.data());
       });
       this.ShowLoding = false;
+      console.log(this.Data.length);
+      if (this.Data.length === 0) {
+        this.AdminState === true;
+      } else {
+        this.AdminState === false;
+      }
     },
     ShowAddAdminFunction() {
       this.ShowAddAdmin = !this.ShowAddAdmin;
@@ -229,41 +249,53 @@ export default {
     async AddAdmin() {
       // Add a new document with a generated id.
       if (
-        this.Name.length > 3 &&
-        this.phone.length === 11 &&
-        this.password.length > 6
+        this.Name.length >= 2 &&
+        this.phone.length >= 11 &&
+        this.password.length >= 4
       ) {
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(this.password, salt);
-        let pass = hashedPassword;
+        // Make Hashing
+        let saltRounds = 10;
+        const hashPassword = (password, saltRounds) => {
+          return new Promise((resolve, reject) => {
+            bcrypt.hash(password.toString(), saltRounds, (err, hash) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              } else {
+                console.log("كلمة المرور المشفرة:", hash);
+                resolve(hash);
+              }
+            });
+          });
+        };
+        const passwordWithHash = await hashPassword(this.password, saltRounds);
+        console.log(passwordWithHash);
         const docRef = await addDoc(collection(db, "المشرفين"), {
           Name: this.Name,
           phone: this.phone,
-          Password: pass,
+          password: passwordWithHash,
           powers:
             document.querySelector(".v-select .v-select__selection-text")
               .innerText || "الكل",
-          Id: null,
+          userid: null,
         });
-        await updateDoc(docRef, { Id: docRef.id });
+        await updateDoc(docRef, { userid: docRef.id });
         this.ShowAddAdmin = false;
         this.GetData();
       }
     },
-    generateRandomString(length) {
-      const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let result = "";
+    // generateRandomString(length) {
+    //   const characters =
+    //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    //   let result = "";
 
-      for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        result += characters.charAt(randomIndex);
-      }
-      this.password = result;
-      return result;
-    },
-
-    // استخدام الدالة لإنشاء سلسلة عشوائية بطول 6
+    //   for (let i = 0; i < length; i++) {
+    //     const randomIndex = Math.floor(Math.random() * characters.length);
+    //     result += characters.charAt(randomIndex);
+    //   }
+    //   this.password = result;
+    //   return result;
+    // },
   },
 };
 </script>

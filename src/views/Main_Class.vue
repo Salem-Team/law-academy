@@ -28,7 +28,7 @@
         <div
           @click="CloseAndOpenAddSub"
           class="flex items-center gap-2.5 p-2.5 bg-[#fff] rounded cursor-pointer hover-0"
-          v-if="UserAdminState"
+          v-if="ShowBtnToUser === 'Admin'"
           style="
             border: 1px solid var(--main-color);
             margin: 10px;
@@ -73,12 +73,12 @@
             <font-awesome-icon
               :icon="['fas', 'pen-to-square']"
               class="absolute left-[7px] top-[7px] bg-[var(--main-color)] text-white text-xs p-1 rounded-full"
-              v-if="UserAdminState"
+              v-if="ShowBtnToUser === 'Admin'"
             />
             <span
               class="absolute left-[35px] top-[7px] bg-[var(--main-color)] text-white text-xs p-1 rounded-full cursor-pointer hidden"
               @click="Updata"
-              v-if="UserAdminState"
+              v-if="ShowBtnToUser === 'Admin'"
               >حفظ التغييرات</span
             >
             <div class="header flex justify-between p-2.5 items-center mt-2.5">
@@ -110,40 +110,10 @@
 
               <div
                 class="cursor-pointer w-48 mb-2.5 Open_Test"
-                v-if="UserAdmin === 'Admin'"
+                @click="CheckAboutUser"
               >
                 <router-link
-                  :to="UserAdmin !== 'Admin' ? '' : '/Main_Testing'"
-                  class="border-1 border-[--main-color] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
-                >
-                  <font-awesome-icon
-                    :icon="['fas', 'clipboard-question']"
-                    class="text-[dimgrey]"
-                  />
-                  <span class="text-[dimgrey]"> الإختبارات </span>
-                </router-link>
-              </div>
-              <div
-                class="cursor-pointer w-48 mb-2.5 Open_Test"
-                v-if="UserAdmin === 'User'"
-              >
-                <router-link
-                  :to="UserAdmin !== 'User' ? '' : '/Main_Testing'"
-                  class="border-1 border-[--main-color] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
-                >
-                  <font-awesome-icon
-                    :icon="['fas', 'clipboard-question']"
-                    class="text-[dimgrey]"
-                  />
-                  <span class="text-[dimgrey]"> الإختبارات </span>
-                </router-link>
-              </div>
-              <div
-                class="cursor-pointer w-48 mb-2.5 Open_Test"
-                v-if="UserAdmin !== 'User' && UserAdmin !== 'Admin'"
-              >
-                <router-link
-                  :to="UserAdmin !== 'Admin' ? '' : '/Main_Testing'"
+                  :to="UserId ? '/Main_Testing' : ''"
                   class="border-1 border-[--main-color] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
                 >
                   <font-awesome-icon
@@ -158,7 +128,7 @@
                 placeholder="لينك كتاب المادة"
                 class="border p-1 input1 pointer-events-none"
                 :value="Data.BookLink"
-                v-if="UserAdminState"
+                v-if="ShowBtnToUser === 'Admin'"
                 style="
                   height: 26px;
                   width: 100%;
@@ -178,214 +148,6 @@
                 />
 
                 <div class="text-lg text-[--main-color]">الكورس المجاني</div>
-              </div>
-              <div class="All_Course flex justify-between">
-                <div class="video flex flex-col gap-2.5 w-32 cursor-pointer">
-                  <a
-                    :href="Data.FreeCourse_Video"
-                    class="flex-col border-1 border-[#ff0000] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
-                  >
-                    <font-awesome-icon
-                      :icon="['fab', 'youtube']"
-                      class="text-[#ff0000] text-2xl"
-                    />
-                    <span class="text-[#ff0000]">الفيديوهات</span>
-                  </a>
-                  <input
-                    type="text"
-                    placeholder="لينك فيديوهات المادة"
-                    class="border p-1 input2 pointer-events-none"
-                    :value="Data.FreeCourse_Video"
-                    v-if="UserAdmin === 'Admin'"
-                  />
-                </div>
-                <div class="pdf1 flex flex-col gap-2.5 w-32 cursor-pointer">
-                  <a
-                    :href="Data.FreeCourse_Pdf_1"
-                    class="flex-col border-1 border-[#857155] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
-                  >
-                    <font-awesome-icon
-                      :icon="['fas', 'book-open-reader']"
-                      class="text-[#857155] text-2xl"
-                    />
-                    <span class="text-[#857155]">المذكرات</span>
-                  </a>
-                  <input
-                    type="text"
-                    placeholder="لينك مذكرات المادة"
-                    class="border p-1 input3 pointer-events-none"
-                    :value="Data.FreeCourse_Pdf_1"
-                    v-if="UserAdmin === 'Admin'"
-                  />
-                </div>
-                <div class="pdf2 flex flex-col gap-2.5 w-32 cursor-pointer">
-                  <a
-                    :href="Data.FreeCourse_Pdf_2"
-                    class="flex-col border-1 border-[dimgrey] flex items-center justify-center gap-2.5 p-2.5 rounded hover-0"
-                  >
-                    <font-awesome-icon
-                      :icon="['fas', 'clipboard-question']"
-                      class="text-[dimgrey] text-2xl"
-                    />
-                    <span class="text-[dimgrey]">بنك الأسئلة</span>
-                  </a>
-                  <input
-                    type="text"
-                    placeholder="لينك كتاب المادة"
-                    class="border p-1 input4 pointer-events-none"
-                    :value="Data.FreeCourse_Pdf_2"
-                    v-if="UserAdmin === 'Admin'"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="Cash_course flex flex-col gap-2.5 my-2.5" v-if="false">
-              <div class="title flex gap-1 items-center">
-                <font-awesome-icon
-                  :icon="['fas', 'coins']"
-                  class="text-[gold]"
-                />
-
-                <div class="text-lg text-[--main-color]">الكورس المدفوع</div>
-              </div>
-              <div class="All_Course flex justify-between">
-                <div
-                  class="video p-2.5 box border-1 border-[#ff0000] flex flex-col items-center justify-center gap-2.5 p-2.5 rounded w-32"
-                >
-                  <div class="flex flex-col">
-                    <font-awesome-icon
-                      :icon="['fab', 'youtube']"
-                      class="text-[#ff0000] text-2xl"
-                    />
-                    <div
-                      class="title text-xl BillName text-base text-[#ff0000] mt-2.5"
-                    >
-                      الفيديوهات
-                    </div>
-                    <div
-                      class="price text-sm text-center flex gap-1.5 font-bold text-lg items-center"
-                    >
-                      <input
-                        type="number"
-                        class="w-10 p-1 rounded input5 pointer-events-none text-center ml-1"
-                        v-if="UserAdmin === 'Admin'"
-                        :value="Data.CachCourse_Video"
-                      />
-                      <span v-else>{{ Data.CachCourse_Video }}</span>
-                      <span>جنية</span>
-                    </div>
-                  </div>
-                  <div
-                    class="px-2.5 py-1 border-1 border-[--main-color] cursor-pointer rounded hover-0 pay w-100 text-left mt-2 text-center"
-                  >
-                    شراء
-                  </div>
-                </div>
-                <div
-                  class="pdf1 p-2.5 box border-1 border-[#857155] flex flex-col items-center justify-center gap-2.5 p-2.5 rounded w-32"
-                >
-                  <div class="flex flex-col">
-                    <font-awesome-icon
-                      :icon="['fas', 'book-open-reader']"
-                      class="text-[#857155] text-2xl"
-                    />
-                    <div
-                      class="title text-xl BillName text-base text-[#857155] mt-2.5"
-                    >
-                      المذكرات
-                    </div>
-                    <div
-                      class="price text-sm text-center flex gap-1.5 font-bold text-lg items-center"
-                    >
-                      <input
-                        type="number"
-                        class="w-10 p-1 rounded input6 pointer-events-none text-center ml-1"
-                        v-if="UserAdmin === 'Admin'"
-                        :value="Data.CachCourse_PdfPrice_1"
-                      />
-                      <span v-else>{{ Data.CachCourse_PdfPrice_1 }}</span>
-                      <span>جنية </span>
-                    </div>
-                  </div>
-                  <div
-                    class="px-2.5 py-1 border-1 border-[--main-color] cursor-pointer rounded hover-0 pay w-100 text-left mt-2 text-center"
-                  >
-                    شراء
-                  </div>
-                </div>
-                <div
-                  class="pdf2 p-2.5 box border-1 border-[dimgrey] flex flex-col items-center justify-center gap-2.5 p-2.5 rounded w-32"
-                >
-                  <div class="flex flex-col">
-                    <font-awesome-icon
-                      :icon="['fas', 'clipboard-question']"
-                      class="text-[dimgrey] text-2xl"
-                    />
-                    <div
-                      class="title text-xl BillName text-base text-[dimgrey] mt-2.5"
-                    >
-                      بنك الأسئلة
-                    </div>
-                    <div
-                      class="price text-sm text-center flex gap-1.5 font-bold text-lg items-center"
-                    >
-                      <input
-                        type="number"
-                        class="w-10 p-1 rounded input7 pointer-events-none text-center ml-1"
-                        v-if="UserAdmin === 'Admin'"
-                        :value="Data.CachCourse_PdfPrice_2"
-                      />
-                      <span v-else>{{ Data.CachCourse_PdfPrice_2 }}</span>
-                      <span>جنية </span>
-                    </div>
-                  </div>
-                  <div
-                    class="px-2.5 py-1 border-1 border-[--main-color] cursor-pointer rounded hover-0 pay w-100 text-left mt-2 text-center"
-                  >
-                    شراء
-                  </div>
-                </div>
-              </div>
-              <div
-                class="AllCourse p-2.5 box border-1 border-[--main-color] flex flex-col gap-2.5 p-2.5 rounded"
-              >
-                <div class="flex-col">
-                  <div class="title text-xl BillName">الكورس كامل</div>
-                </div>
-                <div class="price text-sm text-left flex flex-col gap-2.5">
-                  <div class="line-through flex justify-end">
-                    <span class="ml-1">{{
-                      +Data.CachCourse_Video +
-                        +Data.CachCourse_PdfPrice_1 +
-                        +Data.CachCourse_PdfPrice_2 || 0
-                    }}</span>
-                    <span>جنية مصري</span>
-                  </div>
-                  <div class="flex gap-1.5 justify-end">
-                    <input
-                      type="number"
-                      class="w-10 p-1 rounded input8 pointer-events-none text-center ml-1"
-                      v-if="UserAdmin === 'Admin'"
-                      :value="Data.AllCourse"
-                    />
-
-                    <span v-else>{{ Data.AllCourse }}</span>
-                    <span>جنية مصري</span>
-                  </div>
-                </div>
-                <div class="w-100 flex justify-between items-center mt-2">
-                  <div class="flex items-center gap-2.5">
-                    <img
-                      src="../assets/free-discount-icon-9685-thumb.png"
-                      style="width: 40px"
-                    />
-                    <span> خصم 10% في حالة شراء الكورس كاملا </span>
-                  </div>
-                  <span
-                    class="px-2.5 py-1 border-1 border-[--main-color] cursor-pointer rounded hover-0 pay"
-                    >شراء</span
-                  >
-                </div>
               </div>
             </div>
           </div>
@@ -671,6 +433,8 @@ export default {
   },
   data() {
     return {
+      UserId: null,
+      ShowBtnToUser: null,
       AllData: [],
       showAddSub: null,
       Ids: [],
@@ -704,8 +468,8 @@ export default {
       snackbar1: false,
       text: "تم نسخ الرقم للحافظة",
       text1: "عليك تسجيل الدخول حتي يتم فتح الإختبار لك",
-      timeout: 2000,
-      timeout1: 500000,
+      timeout: 3000,
+      timeout1: 5000,
       Show_Open_Test: null,
       UserAdminState: null,
     };
@@ -717,7 +481,14 @@ export default {
     AddSub,
   },
   mounted() {
-    this.TheState();
+    setInterval(() => {
+      if (localStorage.getItem("userid") === null) {
+        this.UserId = false;
+      } else {
+        this.UserId = true;
+      }
+    }, 100);
+    this.CheckAboutUserState();
     setTimeout(() => {
       location.href = `${location.href}#Main_Class`;
     }, 10);
@@ -725,50 +496,44 @@ export default {
       this.getvalues();
     }, 10);
     setTimeout(() => {
-      this.GetAdminState();
       this.getdata();
     }, 100);
   },
   methods: {
-    async GetAdminState() {
-      if (this.UserAdmin === "Admin") {
-        const querySnapshot = await getDocs(collection(db, "المشرفين"));
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          if (doc.data().Id === localStorage.getItem("userid")) {
-            if (
-              doc.data().powers === "الكل" ||
-              doc.data().powers === "إضافة الإختبارات & كورسات"
-            ) {
-              this.UserAdminState = true;
-            }
-          }
-        });
+    CheckAboutUser() {
+      // setTimeout(() => {
+      // this.UserId = localStorage.getItem("userid") ? true : false;
+      if (localStorage.getItem("userid") === null) {
+        this.UserId = false;
+      } else {
+        this.UserId = true;
       }
+      this.snackbar1 = !this.UserId;
+      console.log("UserId", this.UserId);
+      // }, 100);
     },
-    Open_Test() {
-      let btn = document.querySelectorAll(".Open_Test > a");
-      for (let i = 0; i < btn.length; i++) {
-        btn[i].onclick = () => {
-          if (this.UserAdmin !== "Admin" || this.UserAdmin !== "User") {
-            this.snackbar1 = true;
-          }
-        };
-      }
-    },
-    async TheState() {
+    async CheckAboutUserState() {
+      // ShowBtnToUser
       try {
         const q_Admin = query(
           collection(db, "المشرفين"),
-          where("Id", "==", localStorage.getItem("userid"))
+          where("userid", "==", localStorage.getItem("userid"))
         );
         const querySnapshot_Admin = await getDocs(q_Admin);
         if (!querySnapshot_Admin.empty) {
-          this.$store.commit("setUserAdmin", "Admin");
+          // Check About Powers
+
+          const docRef = doc(db, "المشرفين", localStorage.getItem("userid"));
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            // if (docSnap.data().powers === "الكل") {
+            this.ShowBtnToUser = "Admin";
+            // }
+          } else {
+            console.log("No such document!");
+          }
         }
-        // else {
-        //   this.$store.commit("setUserAdmin", "");
-        // }
       } catch (error) {
         error;
       }
@@ -779,15 +544,13 @@ export default {
         );
         const querySnapshot_User = await getDocs(q_User);
         if (!querySnapshot_User.empty) {
-          this.$store.commit("setUserAdmin", "User");
+          this.ShowBtnToUser = "Student";
         }
-        // else {
-        //   this.$store.commit("setUserAdmin", "");
-        // }
       } catch (error) {
         error;
       }
     },
+
     copyTextSvg(event) {
       event.stopPropagation();
       event.target.parentElement.parentElement.classList.add("green");
@@ -842,51 +605,6 @@ export default {
       this.BillLang = localStorage.getItem("updateLang");
       this.BillClass = localStorage.getItem("updateClass");
       this.Close = true;
-    },
-    CloseFunction() {
-      setTimeout(() => {
-        let boxes = document.querySelectorAll(".main_box .Cash_course");
-        let title = document.querySelectorAll(".main_box > .header .title ");
-
-        for (let i = 0; i < boxes.length; i++) {
-          boxes[i].querySelectorAll(".main_box .pay")[0].onclick = () => {
-            this.SubName = title[i].innerHTML;
-            this.BillPrice = this.AllData[i].CachCourse_Video;
-            this.BillName = "الفيديوهات";
-            this.BillType = localStorage.getItem("updateType");
-            this.BillLang = localStorage.getItem("updateLang");
-            this.BillClass = localStorage.getItem("updateClass");
-            this.Close = true;
-          };
-          boxes[i].querySelectorAll(".main_box .pay")[1].onclick = () => {
-            this.SubName = title[i].innerHTML;
-            this.BillPrice = this.AllData[i].CachCourse_PdfPrice_1;
-            this.BillName = "المذكرات";
-            this.BillType = localStorage.getItem("updateType");
-            this.BillLang = localStorage.getItem("updateLang");
-            this.BillClass = localStorage.getItem("updateClass");
-            this.Close = true;
-          };
-          boxes[i].querySelectorAll(".main_box .pay")[2].onclick = () => {
-            this.SubName = title[i].innerHTML;
-            this.BillPrice = this.AllData[i].CachCourse_PdfPrice_2;
-            this.BillName = "بنك الأسئلة";
-            this.BillType = localStorage.getItem("updateType");
-            this.BillLang = localStorage.getItem("updateLang");
-            this.BillClass = localStorage.getItem("updateClass");
-            this.Close = true;
-          };
-          boxes[i].querySelectorAll(".main_box .pay")[3].onclick = () => {
-            this.SubName = title[i].innerHTML;
-            this.BillPrice = this.AllData[i].AllCourse;
-            this.BillName = "الكورس كامل";
-            this.BillType = localStorage.getItem("updateType");
-            this.BillLang = localStorage.getItem("updateLang");
-            this.BillClass = localStorage.getItem("updateClass");
-            this.Close = true;
-          };
-        }
-      }, 1000);
     },
 
     async pay_1() {
@@ -1228,7 +946,7 @@ export default {
         this.EditFunction();
         this.AddSubToStore();
         this.CloseFunction();
-        this.Open_Test();
+        // this.Open_Test();
       }, 1000);
     },
   },

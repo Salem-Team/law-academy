@@ -31,7 +31,7 @@
         <span
           class="bg-[#fff] p-2.5 rounded cursor-pointer flex items-center gap-2.5 hover-0"
           @click="CloseAndOpenAddTest"
-          v-if="UserAdminState"
+          v-if="ShowBtnToUser === 'Admin'"
           style="
             border: 1px solid var(--main-color);
             margin: 10px;
@@ -228,6 +228,10 @@ export default {
     },
   },
   mounted() {
+    this.CheckAboutAdminState();
+    setInterval(() => {
+      this.CheckAboutAdminState();
+    }, 1000);
     this.getvalues();
     setTimeout(() => {
       this.GetData();
@@ -235,6 +239,7 @@ export default {
   },
   data() {
     return {
+      ShowBtnToUser: null,
       ShowAddTest: null,
       ShowAddQu: null,
       MsgEmpty: "",
@@ -262,6 +267,24 @@ export default {
     PayTest,
   },
   methods: {
+    async CheckAboutAdminState() {
+      // ShowBtnToUser
+      try {
+        const q_Admin = query(
+          collection(db, "المشرفين"),
+          where("userid", "==", localStorage.getItem("userid"))
+        );
+        const querySnapshot_Admin = await getDocs(q_Admin);
+        if (!querySnapshot_Admin.empty) {
+          // Check About Powers
+          this.ShowBtnToUser = "Admin";
+        } else {
+          this.ShowBtnToUser = "";
+        }
+      } catch (error) {
+        error;
+      }
+    },
     async GetAdminState() {
       if (this.UserAdmin === "Admin") {
         const querySnapshot = await getDocs(collection(db, "المشرفين"));

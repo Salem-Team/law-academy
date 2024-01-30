@@ -26,7 +26,7 @@
           style="width: 25px"
         />
       </div>
-
+      <button @click="hash">hash</button>
       <v-sheet class="mx-auto">
         <v-form fast-fail @submit.prevent class="flex flex-wrap gap-2.5">
           <v-text-field
@@ -60,7 +60,7 @@
               style="padding: 10px"
               class="flex text-h6 font-weight-regular justify-space-between mb-2.5 gap-2.5"
             >
-              <v-avatar v-text="step"></v-avatar>
+              <v-avatar :v-text="step"></v-avatar>
               <span
                 style="
                   font-size: 20px;
@@ -213,10 +213,11 @@
               text-align: center;
               font-family: system-ui;
               border-radius: 5px;
+              border: 1px solid var(--main-color);
             "
             size="x-large"
             variant="flat"
-            @click="Test"
+            @click="Register"
           >
             إنشاء حساب
           </v-btn>
@@ -479,6 +480,17 @@ export default {
     },
   },
   methods: {
+    hash() {
+      console.log("passwordWithHash");
+      const saltRounds = 10;
+      bcrypt.hash("1234", saltRounds, (err, hash) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log("كلمة المرور المشفرة:", hash);
+      });
+    },
     CloseTheRegister() {
       this.ShowHello = false;
       this.$emit("close_2");
@@ -488,7 +500,7 @@ export default {
       console.log(e.target);
     },
     // div.event.target.style.border = "1px solid var(--main-color)";
-    async Test() {
+    async Register() {
       let MainState;
       // Test The Name
       if (
@@ -585,13 +597,31 @@ export default {
       if (MainState) {
         this.loading = !this.loading;
 
-        // Edit Coolege Place , Type And Gender
+        // Edit College Place , Type And Gender
 
         const names = this.selectedPlace.split(" - ");
         const firstName = names[0];
         const lastName = names[1];
         const names_1 = this.type.split(" ");
         const firstName_1 = names_1[0];
+
+        // Make Hashing
+
+        let saltRounds = 10;
+        const hashPassword = (password, saltRounds) => {
+          return new Promise((resolve, reject) => {
+            bcrypt.hash(password.toString(), saltRounds, (err, hash) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              } else {
+                console.log("كلمة المرور المشفرة:", hash);
+                resolve(hash);
+              }
+            });
+          });
+        };
+        const passwordWithHash = await hashPassword(this.password, saltRounds);
 
         // Add data
 
@@ -601,7 +631,7 @@ export default {
           name_3: this.Name3,
           phone: this.phone,
           email: this.email,
-          password: this.password,
+          password: passwordWithHash,
           Type: firstName_1,
           Lang: this.lang,
           Class: this.Class,
@@ -617,87 +647,7 @@ export default {
         this.ShowHello = true;
       }
     },
-    async NewAccount() {
-      let SameData;
-      let SameData1;
-      const q = query(
-        collection(db, "الطلاب"),
-        where("phone", "==", this.phone)
-      );
-      const q1 = query(
-        collection(db, "الطلاب"),
-        where("email", "==", this.email)
-      );
-      const querySnapshot = await getDocs(q);
-      const querySnapshot1 = await getDocs(q1);
-      if (!querySnapshot.empty) {
-        SameData = false;
-        this.ErrorMsg = "رقم الهاتف  مسجل بالفعل علي الموقع";
-      } else {
-        SameData = true;
-      }
-      if (!querySnapshot1.empty) {
-        SameData1 = false;
-        this.ErrorMsg = "الإيميل مسجل بالفعل علي الموقع";
-      } else {
-        SameData1 = true;
-      }
-      if (
-        this.Name1.length > 1 &&
-        this.Name2.length > 1 &&
-        this.Name3.length > 1 &&
-        this.phone.length === 11 &&
-        this.password >= 6 &&
-        /.+@.+\..+/.test(this.email) &&
-        this.type !== "" &&
-        this.lang !== "" &&
-        this.Class !== "" &&
-        SameData === true &&
-        SameData1 === true
-      ) {
-        console.log("trueeeeeeeee");
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(this.user.password_1, salt);
-        let pass = hashedPassword;
-        const str = document.querySelector(
-          ".v-select__selection-text"
-        ).innerText;
-        const wordsArray = str.split(" "); // تحويل السلسلة إلى مصفوفة من الكلمات
-        const FirstWord = wordsArray[0]; // الحصول على آخر كلمة في المصفوفة
-        const lastWord = wordsArray[wordsArray.length - 1]; // الحصول على آخر كلمة في المصفوفة
-        const docRef = await addDoc(collection(db, "الطلاب"), {
-          name_1: this.Name1,
-          name_2: this.Name2,
-          name_3: this.Name3,
-          email: this.email,
-          phone: this.phone,
-          college_place: FirstWord,
-          password: pass,
-          resultes: [],
-          pay: [],
-          type: lastWord,
-          Class: this.Class,
-          TypeOfClass: this.type,
-          Lang: this.lang,
-          userid: null,
-          AllResults: 0,
-        });
-        await updateDoc(docRef, { userid: docRef.id });
-        setTimeout(() => {
-          localStorage.setItem("username_1", this.Name1);
-          localStorage.setItem("username_2", this.Name2);
-          localStorage.setItem("username_3", this.Name3);
-          localStorage.setItem("userid", docRef.id);
-          this.closeHelloUser = true;
-        }, 100);
 
-        // this.$emit("close_2");
-        setTimeout(() => {
-          this.State();
-        }, 100);
-        console.log(this.Name1);
-      }
-    },
     select_1() {
       this.step++;
       setTimeout(() => {
@@ -753,36 +703,6 @@ export default {
         };
       });
     },
-    async State() {
-      try {
-        const q_Admin = query(
-          collection(db, "المشرفين"),
-          where("Id", "==", localStorage.getItem("userid"))
-        );
-        const querySnapshot_Admin = await getDocs(q_Admin);
-        if (!querySnapshot_Admin.empty) {
-          this.$store.commit("setUserAdmin", "Admin");
-        } else {
-          this.$store.commit("setUserAdmin", "");
-        }
-      } catch (error) {
-        error;
-      }
-      try {
-        const q_User = query(
-          collection(db, "الطلاب"),
-          where("userid", "==", localStorage.getItem("userid"))
-        );
-        const querySnapshot_User = await getDocs(q_User);
-        if (!querySnapshot_User.empty) {
-          this.$store.commit("setUserAdmin", "User");
-        } else {
-          this.$store.commit("setUserAdmin", "");
-        }
-      } catch (error) {
-        error;
-      }
-    },
     close_2() {
       this.$emit("close_2");
     },
@@ -791,148 +711,6 @@ export default {
     },
     handleSelectChange(event) {
       this.selectedValue = event.target.value;
-    },
-    async Register() {
-      const arabicRegex = /[\u0600-\u06FF\s]+/;
-      let en;
-      let pass;
-      let email;
-      let phone;
-      let Samephone;
-      let AllData;
-      let SameData;
-      let SameData1;
-      const q = query(
-        collection(db, "الطلاب"),
-        where("phone", "==", this.user.phone)
-      );
-      const q1 = query(
-        collection(db, "الطلاب"),
-        where("email", "==", this.user.email)
-      );
-      const querySnapshot = await getDocs(q);
-      const querySnapshot1 = await getDocs(q1);
-      if (!querySnapshot.empty) {
-        SameData = false;
-        this.ErrorMsg = "رقم الهاتف  مسجل بالفعل علي الموقع";
-      } else {
-        SameData = true;
-      }
-      if (!querySnapshot1.empty) {
-        SameData1 = false;
-        this.ErrorMsg = "الإيميل مسجل بالفعل علي الموقع";
-      } else {
-        SameData1 = true;
-      }
-
-      if (this.user.password_1 !== this.user.password_2) {
-        pass = false;
-        this.ErrorMsg = "يرجى التأكد من كتابة تأكيد كلمة السر بنجاح";
-      } else {
-        pass = true;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.user.email)) {
-        email = false;
-        this.ErrorMsg = "البريد الإلكتروني غير صالح";
-      } else {
-        email = true;
-      }
-      if (this.user.phone === this.user.parents_phone) {
-        Samephone = false;
-        this.ErrorMsg = "لا يجوز ان يتشابه رقم ولي الأمر مع رقم الطالب";
-      } else {
-        Samephone = true;
-      }
-      const egyptianPhoneNumberRegex = /^(10|11|12|15)[0-9]{8}$/;
-      if (!egyptianPhoneNumberRegex.test(+`0${+this.user.phone}`)) {
-        phone = false;
-        this.ErrorMsg =
-          "رقم الهاتف المدخل غير صحيح , ملحوظة :   يمكنك إدخال رقمك المصري فقط";
-      } else {
-        phone = true;
-      }
-      if (
-        !arabicRegex.test(this.user.Name_1) ||
-        !arabicRegex.test(this.user.Name_2) ||
-        !arabicRegex.test(this.user.Name_3)
-      ) {
-        en = false;
-        this.ErrorMsg = "يرجي كتابة الإسم باللغة العربية";
-      } else {
-        en = true;
-      }
-      if (
-        this.user.Name_1 === "" ||
-        this.user.Name_2 === "" ||
-        this.user.Name_3 === "" ||
-        this.user.email === "" ||
-        this.user.phone === "" ||
-        this.user.college_place === "" ||
-        this.user.password_1 === "" ||
-        this.user.password_2 === "" ||
-        document.querySelector(".form-floating>.form-select").value === "" ||
-        this.value === false
-      ) {
-        AllData = false;
-        this.ErrorMsg = "يرجي إكمال كافة البينات";
-      } else {
-        AllData = true;
-      }
-      if (
-        en === true &&
-        pass === true &&
-        email === true &&
-        phone === true &&
-        Samephone === true &&
-        AllData === true &&
-        SameData === true &&
-        SameData1 === true
-      ) {
-        this.ErrorMsg = "";
-
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(this.user.password_1, salt);
-        let pass = hashedPassword;
-        const str = document.querySelector(
-          ".v-select__selection-text"
-        ).innerText;
-        const wordsArray = str.split(" "); // تحويل السلسلة إلى مصفوفة من الكلمات
-        const lastWord = wordsArray[wordsArray.length - 1]; // الحصول على آخر كلمة في المصفوفة
-        const docRef = await addDoc(collection(db, "الطلاب"), {
-          name_1: this.user.Name_1,
-          name_2: this.user.Name_2,
-          name_3: this.user.Name_3,
-          email: this.user.email,
-          phone: this.user.phone,
-          parents_phone: this.user.parents_phone,
-          college_place: document.querySelector(".form-floating>.form-select")
-            .value,
-          password: pass,
-          resultes: [],
-          pay: [],
-          type: lastWord,
-          Class: this.class,
-          TypeOfClass: this.type,
-          Lang: this.lang,
-          userid: null,
-          AllResults: 0,
-        });
-        await updateDoc(docRef, { userid: docRef.id });
-        setTimeout(() => {
-          localStorage.setItem("username_1", this.user.Name_1);
-          localStorage.setItem("username_2", this.user.Name_2);
-          localStorage.setItem("username_3", this.user.Name_3);
-          localStorage.setItem("userid", docRef.id);
-          this.closeHelloUser = true;
-        }, 100);
-
-        // this.$emit("close_2");
-        setTimeout(() => {
-          this.State();
-        }, 100);
-      }
     },
   },
 };
