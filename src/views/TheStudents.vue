@@ -1,32 +1,49 @@
 <template>
   <div class="TheStudents" style="margin-top: -20px; padding-bottom: 50px">
     <div class="container relative" style="padding-top: 160px">
-      <nav class="mb-2.5" aria-label="breadcrumb">
-        <MDBBreadcrumb>
-          <MDBBreadcrumbItem>{{ Type }} / </MDBBreadcrumbItem>
-          <MDBBreadcrumbItem>{{ Lang }} / </MDBBreadcrumbItem>
-
-          <MDBBreadcrumbItem active> {{ Class }}</MDBBreadcrumbItem>
-        </MDBBreadcrumb>
-        <div style="display: flex; align-items: center; gap: 10px">
+      <div
+        class="main_Overlay"
+        v-if="Sliders"
+        @click="Sliders = !Sliders"
+      ></div>
+      <div
+        v-if="Sliders"
+        class="Sliders bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+        style="width: 90%; z-index: 100"
+      >
+        <div
+          class="header mb-2.5"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--main-color);
+            font-weight: bold;
+          "
+        >
+          <div style="font-size: 20px">حدد فرقة دراسية</div>
           <font-awesome-icon
-            :icon="['fas', 'sliders']"
-            style="background: #fafafa; padding: 10px; border-radius: 5px"
-          />
-          <font-awesome-icon
-            :icon="['fas', 'magnifying-glass']"
-            style="background: #fafafa; padding: 10px; border-radius: 5px"
+            @click="Sliders = !Sliders"
+            style="font-size: 25px"
+            :icon="['fas', 'rectangle-xmark']"
           />
         </div>
-      </nav>
-      <div class="contain flex">
-        <div class="right w-2/5">
+        <div class="body">
           <v-card class="mx-auto" width="100%">
             <v-card-title
-              style="padding: 10px"
+              style="
+                padding: 10px;
+                gap: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start !important;
+              "
               class="text-h6 font-weight-regular justify-space-between mb-2.5"
             >
-              <v-avatar :v-text="step"></v-avatar>
+              <v-avatar
+                v-text="step"
+                style="width: 30px; height: 30px; font-size: 15px"
+              ></v-avatar>
               <span
                 style="
                   font-size: 20px;
@@ -78,6 +95,7 @@
                     v-for="Class in classes"
                     :key="Class"
                     class="border-gray-300 border rounded flex justify-center items-center w-23 p-10 cursor-pointer hover_color_border"
+                    @click="Sliders = !Sliders"
                   >
                     {{ Class }}
                   </a>
@@ -103,130 +121,252 @@
             </v-card-actions>
           </v-card>
         </div>
-        <div class="left w-3/5">
-          <div>عدد الطلاب : {{ Students.length }}</div>
-          <div>عدد البنات : {{ Female.length }}</div>
-          <div>عدد الأولاد : {{ Male.length }}</div>
-          <input
-            v-model="searchInput"
-            @input="searchNames"
-            placeholder="ابحث في الأسماء"
-            class="border w-100 p-2.5"
+      </div>
+      <nav class="mb-2.5" aria-label="breadcrumb">
+        <MDBBreadcrumb>
+          <MDBBreadcrumbItem>{{ Type }} / </MDBBreadcrumbItem>
+          <MDBBreadcrumbItem>{{ Lang }} / </MDBBreadcrumbItem>
+
+          <MDBBreadcrumbItem active> {{ Class }}</MDBBreadcrumbItem>
+        </MDBBreadcrumb>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <font-awesome-icon
+            :icon="['fas', 'sliders']"
+            style="background: #fafafa; padding: 10px; border-radius: 5px"
+            @click="Sliders = !Sliders"
           />
+          <font-awesome-icon
+            :icon="['fas', 'magnifying-glass']"
+            style="background: #fafafa; padding: 10px; border-radius: 5px"
+            @click="Search = !Search"
+          />
+        </div>
+      </nav>
+      <div>
+        <div class="main_Overlay" v-if="Search" @click="Search = !Search"></div>
 
-          <div class="content flex">
-            <img
-              src="../assets/animation_loia37xm_small.gif"
-              alt=""
-              v-if="showDownloadIcon"
-              class="m-auto"
-            />
-            <div
-              class="box border p-2.5"
-              v-for="(Student, index) in Students"
-              :key="Student"
+        <v-text-field
+          label="ابحث في الأسماء"
+          :rules="passRules"
+          class="border p-2.5 bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+          type="text"
+          v-if="Search"
+          style="width: 90%"
+          v-model="searchInput"
+        >
+          <div
+            class="Show_Password absolute -translate-x-1/2 -translate-y-1/2 left-5 top-1/2"
+            @click="Search = !Search"
+          >
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+          </div>
+        </v-text-field>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              gap: 10px;
+              justify-content: center;
+            "
+          >
+            <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :model-value="AllStudent"
+              style="color: var(--main-color) !important"
             >
-              <div class="num">{{ index + 1 }}</div>
-              <div class="flex">
-                <div class="name">{{ Student.Name }}</div>
-                <div class="flex flex-col justify-between items-center">
-                  <div class="AllResults">{{ Student.AllResults || 0 }}%</div>
-                  <div>متوسط النتائج</div>
-                </div>
-              </div>
-              <div class="flex justify-between">
+              <template v-slot:default>
                 <div
-                  class="button border p-2.5 cursor-pointer"
-                  @click="GetBIll(index)"
+                  style="
+                    font-size: 20px !important;
+                    color: var(--main-color) !important;
+                    font-weight: bold !important;
+                  "
                 >
-                  الفواتير
+                  {{ AllStudent || 0 }} %
                 </div>
+              </template>
+            </v-progress-circular>
+            <div>عدد الطلاب</div>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              gap: 10px;
+              justify-content: center;
+            "
+          >
+            <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :model-value="AllBoy"
+              style="color: var(--main-color) !important"
+            >
+              <template v-slot:default>
                 <div
-                  class="button border p-2.5 cursor-pointer"
-                  @click="GetResult(index)"
+                  style="
+                    font-size: 20px !important;
+                    color: var(--main-color) !important;
+                    font-weight: bold !important;
+                  "
                 >
-                  النتائج
+                  {{ AllBoy || 0 }} %
                 </div>
+              </template>
+            </v-progress-circular>
+            <div>عدد الأولاد</div>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              gap: 10px;
+              justify-content: center;
+            "
+          >
+            <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :model-value="AllGirl"
+              style="color: var(--main-color) !important"
+            >
+              <template v-slot:default>
+                <div
+                  style="
+                    font-size: 20px !important;
+                    color: var(--main-color) !important;
+                    font-weight: bold !important;
+                  "
+                >
+                  {{ AllGirl || 0 }} %
+                </div>
+              </template>
+            </v-progress-circular>
+            <div>عدد البنات</div>
+          </div>
+        </div>
+        <div class="content flex" style="gap: 10px; flex-wrap: wrap">
+          <img
+            src="../assets/animation_loia37xm_small.gif"
+            alt=""
+            v-if="showDownloadIcon"
+            class="m-auto"
+          />
+          <div
+            class="box border p-2.5"
+            v-for="(Student, index) in Students"
+            :key="Student"
+          >
+            <div class="num">{{ index + 1 }}</div>
+            <div class="flex">
+              <div class="name">{{ Student.Name }}</div>
+              <div class="flex flex-col justify-between items-center">
+                <div class="AllResults">{{ Student.AllResults || 0 }}%</div>
+                <div>متوسط النتائج</div>
               </div>
             </div>
-            <div
-              class="main_Overlay"
-              v-if="BIllShow"
-              style="z-index: 101"
-            ></div>
-            <div
-              class="main_Overlay"
-              v-if="ResultShow"
-              style="z-index: 101"
-            ></div>
-            <div
-              class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-              style="z-index: 101"
-              v-if="BIllShow"
-            >
-              <div>
-                <font-awesome-icon
-                  :icon="['fas', 'xmark']"
-                  @click="BIllShowFunction"
-                />
+            <div class="flex justify-between">
+              <div
+                class="button border p-2.5 cursor-pointer"
+                @click="GetBIll(index)"
+              >
+                الفواتير
               </div>
-              <div class="BIll border p-2.5" v-for="bill in BIll" :key="bill">
-                <div>الدراسة : {{ bill.BillType }}</div>
-                <div>القسم : {{ bill.BillLang }}</div>
-                <div>الفرقة : {{ bill.BillClass }}</div>
-                <div>الصنف : {{ bill.BillItem }}</div>
-                <div>السعر : {{ +bill.BillPrice / 100 }}</div>
-                <div>المادة : {{ bill.BillName }}</div>
-                <div>كود الإستلام : {{ bill.order_id }}</div>
-                <div>
-                  تاريخ الدفع :
-                  {{
-                    new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  }}
-                </div>
+              <div
+                class="button border p-2.5 cursor-pointer"
+                @click="GetResult(index)"
+              >
+                النتائج
               </div>
             </div>
-            <div
-              class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-              v-if="ResultShow"
-              style="z-index: 101"
-            >
+          </div>
+          <div class="main_Overlay" v-if="BIllShow" style="z-index: 101"></div>
+          <div
+            class="main_Overlay"
+            v-if="ResultShow"
+            style="z-index: 101"
+          ></div>
+          <div
+            class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+            style="z-index: 101"
+            v-if="BIllShow"
+          >
+            <div>
+              <font-awesome-icon
+                :icon="['fas', 'xmark']"
+                @click="BIllShowFunction"
+              />
+            </div>
+            <div class="BIll border p-2.5" v-for="bill in BIll" :key="bill">
+              <div>الدراسة : {{ bill.BillType }}</div>
+              <div>القسم : {{ bill.BillLang }}</div>
+              <div>الفرقة : {{ bill.BillClass }}</div>
+              <div>الصنف : {{ bill.BillItem }}</div>
+              <div>السعر : {{ +bill.BillPrice / 100 }}</div>
+              <div>المادة : {{ bill.BillName }}</div>
+              <div>كود الإستلام : {{ bill.order_id }}</div>
               <div>
-                <font-awesome-icon
-                  :icon="['fas', 'xmark']"
-                  @click="ResultShowFunction"
-                />
+                تاريخ الدفع :
+                {{
+                  new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                }}
               </div>
-              <div class="BIll border p-2.5" v-for="bill in Result" :key="bill">
-                <div>الدراسة : {{ bill.Type }}</div>
-                <div>القسم : {{ bill.Lang }}</div>
-                <div>الفرقة : {{ bill.Class }}</div>
-                <div>المادة : {{ bill.Sub }}</div>
+            </div>
+          </div>
+          <div
+            class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+            v-if="ResultShow"
+            style="z-index: 101"
+          >
+            <div>
+              <font-awesome-icon
+                :icon="['fas', 'xmark']"
+                @click="ResultShowFunction"
+              />
+            </div>
+            <div class="BIll border p-2.5" v-for="bill in Result" :key="bill">
+              <div>الدراسة : {{ bill.Type }}</div>
+              <div>القسم : {{ bill.Lang }}</div>
+              <div>الفرقة : {{ bill.Class }}</div>
+              <div>المادة : {{ bill.Sub }}</div>
 
-                <div>اختبار رقم ({{ bill.TestNumber }})</div>
-                <div>التقدير : {{ bill.appreciation }}</div>
-                <div>النسبة المؤية : {{ bill.percent }}%</div>
-                <div>المجموع : {{ bill.result }} / {{ bill.Allresult }}</div>
-                <div>
-                  تاريخ اختبار الطالب :
-                  {{
-                    new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  }}
-                </div>
+              <div>اختبار رقم ({{ bill.TestNumber }})</div>
+              <div>التقدير : {{ bill.appreciation }}</div>
+              <div>النسبة المؤية : {{ bill.percent }}%</div>
+              <div>المجموع : {{ bill.result }} / {{ bill.Allresult }}</div>
+              <div>
+                تاريخ اختبار الطالب :
+                {{
+                  new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                }}
               </div>
             </div>
           </div>
@@ -254,6 +394,7 @@ export default {
   name: "TheStudents",
   mounted() {
     this.GetData();
+
     setTimeout(() => {
       this.select();
     }, 10);
@@ -285,14 +426,25 @@ export default {
     showDownloadIcon: false,
     BIll: [],
     Result: [],
+    Sliders: null,
     BIllShow: null,
     ResultShow: null,
+    Search: null,
     Male: [],
     Female: [],
     names: [],
     searchInput: "",
+    AllStudent: 0,
+    AllGirl: 0,
+    AllBoy: 0,
   }),
   methods: {
+    Progress() {
+      this.AllStudent = this.Students.length;
+      this.AllBoy = this.Male.length;
+      this.AllGirl = this.Female.length;
+      console.log(this.AllBoy);
+    },
     select_1() {
       this.step++;
       setTimeout(() => {
@@ -448,6 +600,7 @@ export default {
           }
         }
       });
+      this.Progress();
     },
   },
 };
