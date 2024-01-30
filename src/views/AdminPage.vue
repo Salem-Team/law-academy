@@ -20,9 +20,6 @@
         <router-link to="/TheStudents" class="box border p-2.5 hover-0">
           الطلاب
         </router-link>
-        <router-link to="#" class="box border p-2.5 hover-0">
-          أرباح الموقع
-        </router-link>
       </div>
     </div>
   </div>
