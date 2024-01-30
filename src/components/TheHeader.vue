@@ -49,6 +49,7 @@
                   <div class="user">
                     <div class="user">
                       <div
+                        v-if="m"
                         style="
                           background: #fff;
                           color: var(--main-color);
