@@ -1,17 +1,17 @@
 <template>
-  <div class="section mt-20">
-    <div class="container flex align-center justify-center gap-2.5">
+  <div class="section" style="margin-top: 125px">
+    <div class="container flex align-center justify-center">
       <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
         <img src="../assets/exam.png" alt="exam" />
-        <div>امتحانات رقمية بنظام MCQ</div>
+        <div class="caption_1">امتحانات رقمية بنظام MCQ</div>
       </div>
       <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
         <img src="../assets/test.png" alt="test" />
-        <div>اكثر من الف سؤال لكل ماده</div>
+        <div class="caption_2">اكثر من الف سؤال لكل ماده</div>
       </div>
       <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
         <img src="../assets/clock.png" alt="clock" />
-        <div>امتحانات بمؤقت ونتائج فوريه</div>
+        <div class="caption_3">امتحانات بمؤقت ونتائج فوريه</div>
       </div>
       <div class="images"></div>
       <div id="text" class="moving-element" ref="movingElement"></div>
@@ -32,7 +32,23 @@ export default {
     };
   },
   mounted() {
-    window.addEventListener("scroll", console.log(window.scrollY));
+    console.log("المكون قد تم تحميله بنجاح");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY >= 395) {
+        document.querySelectorAll(".feat > div").forEach((e) => {
+          e.style.cssText = `top: 10px !important;transform: rotate(0deg)!important`;
+        });
+
+        console.log(window.scrollY);
+      } else if (window.scrollY < 395) {
+        document.querySelectorAll(".feat > div").forEach((e) => {
+          e.style.cssText = `top: -270px !important;transform: rotate(7deg)!important`;
+        });
+        document.querySelector(
+          ".caption_2"
+        ).style.cssText = `transform: rotate(-7deg)!important`;
+      }
+    });
   },
 
   methods: {
@@ -46,6 +62,9 @@ export default {
 img {
   height: 200px;
 }
+.container {
+  gap: 20px;
+}
 .feat {
   > div {
     background: #fafafa;
@@ -56,6 +75,14 @@ img {
     color: var(--main-color);
     font-weight: bold;
     font-family: system-ui;
+    position: relative;
+    top: -270px;
+    transition: 1.3s;
+    transform: rotate(7deg);
+    box-shadow: 0 0 1px var(--main-color);
+    &.caption_2 {
+      transform: rotate(-7deg);
+    }
   }
 }
 @media (min-width: 1200px) {
@@ -68,7 +95,7 @@ img {
   .section {
     .container {
       flex-direction: column;
-      gap: 30px;
+      gap: 50px;
       .feat {
         width: 100% !important;
       }
