@@ -11,6 +11,7 @@
           margin: 50px auto;
           font-size: 24px;
           font-weight: bold;
+          color: var(--main-color);
         "
       >
         معرض الصور
@@ -22,29 +23,40 @@
         style="
           font-weight: bold;
           border-radius: 5px;
-          padding: 5px 15px;
+          /* padding: 5px; */
           border: 1px solid var(--main-color);
           color: var(--main-color);
-          width: 40px;
-          height: 40px;
+          width: 35px;
+          height: 35px;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.3s ease 0s;
           position: absolute;
-          top: 0;
+          top: 0px;
           left: 10px;
         "
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </div>
-      <div class="main_Overlay" v-if="Add_Img"></div>
+      <div class="main_Overlay" v-if="Add_Img" @click="Add_Img = false"></div>
       <div
         v-if="Add_Img"
         class="Add_Img bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-        style="z-index: 101"
+        style="z-index: 101; width: 90%"
       >
-        <div class="header flex items-center justify-between">
+        <div
+          class="header flex items-center justify-between"
+          style="
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--main-color);
+            background: #fafafa;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+          "
+        >
           <div>أضف صورة</div>
 
           <font-awesome-icon
@@ -53,7 +65,7 @@
           />
         </div>
         <div class="body">
-          <v-sheet width="300" class="mx-auto">
+          <v-sheet width="100%" class="mx-auto">
             <v-form fast-fail @submit.prevent="AddImg">
               <v-text-field
                 v-model="Link"
@@ -105,16 +117,17 @@
         <div
           v-for="(MyImg, index) in img"
           :key="MyImg"
-          class="d-flex child-flex relative"
+          class="d-flex child-flex relative img"
           :class="MyImg.Category"
           cols="4"
+          style="width: 32%"
         >
           <v-img
             :src="MyImg.Link"
             :lazy-src="MyImg.Link"
             aspect-ratio="1"
             cover
-            class="bg-grey-lighten-2 Main_Img"
+            class="bg-grey-lighten-2 Main_Img w-100"
             @click="showModal(index)"
             style="
               cursor: zoom-in !important;
@@ -147,10 +160,10 @@
               background: #fff;
               width: 25px;
               height: 25px;
-              padding: 10px;
               border-radius: 50%;
               opacity: 0.7;
               font-weight: bold;
+              padding: 10px;
             "
           />
           <img :src="img[currentIndex].Link" alt="" />
@@ -180,17 +193,18 @@
               position: absolute;
               top: 20px;
               left: 30px;
-              font-size: 30px;
               color: var(--main-color);
               cursor: pointer;
-              background: #fff;
-              width: 40px;
-              height: 40px;
-              padding: 10px;
+              background: rgb(255, 255, 255);
+              width: 35px;
+              height: 35px;
               border-radius: 50%;
               opacity: 0.7;
+              transition: all 0.3s ease 0s;
+              padding: 10px;
             "
           />
+          <!-- padding: 10px; -->
         </div>
       </div>
       <div
@@ -242,8 +256,8 @@ export default {
     this.CheckAboutAdminState();
     setTimeout(() => {
       this.GetAdminState();
+      this.GetData();
     }, 100);
-    this.GetData();
   },
 
   computed: {
@@ -341,9 +355,9 @@ export default {
       let btn = document.querySelectorAll(".buttons > div>  div ");
       setTimeout(() => {
         console.log(document.querySelectorAll(".box > div").length);
-        if (document.querySelectorAll(".box > div").length > 8) {
+        if (document.querySelectorAll(".box > div").length >= 6) {
           document.querySelectorAll(".box > div").forEach((e, index) => {
-            if (index > 7) {
+            if (index >= 6) {
               console.log(e);
               e.classList.add("hidden");
             }
@@ -413,6 +427,7 @@ export default {
       });
       this.img = Arr;
       this.Select();
+      console.log(this.img.length);
     },
     async AddImg() {
       if (this.Link.length > 10) {
@@ -452,23 +467,15 @@ export default {
   display: flex;
   gap: 10px;
   text-align: center;
-  margin: -40px auto 40px;
+  margin: -23px auto 40px;
   justify-content: center;
-  div {
-    // border: 1px solid var(--main-color);
-    // cursor: pointer;
-    // color: var(--main-color);
-    // width: 90px;
-    // height: 40px;
-    // border-radius: 5px;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // font-size: 18px;
-    // &.active {
-    //   background: var(--main-color);
-    //   color: #fff;
-    // }
+  & > div > div {
+    border: 1px solid var(--main-color);
+    transition: 0.3s;
+    padding: 2px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--main-color);
   }
 }
 
@@ -517,35 +524,24 @@ svg:hover {
 }
 .active {
   background: var(--main-color);
-  color: #fff;
+  color: #fff !important;
 }
+
 @media (min-width: 1200px) {
-  .box {
-    & > div {
-      // width: 24%;
-    }
-  }
 }
+
 @media (min-width: 768px) and (max-width: 1199px) {
-  .box {
-    & > div:not(:last-child) {
-      width: 24%;
-    }
-  }
 }
 
 @media (max-width: 767px) {
-  .box {
-    flex-wrap: wrap;
-    & > div:not(:last-child) {
-      width: 48% !important;
-    }
+  .box > .img {
+    width: 48% !important;
   }
+
   .buttons {
     flex-direction: column;
     & > div {
-      width: 100%;
-      justify-content: space-between;
+      justify-content: space-around;
     }
   }
 }

@@ -38,7 +38,6 @@ export default {
     };
   },
   mounted() {
-    console.log("المكون قد تم تحميله بنجاح");
     window.addEventListener("scroll", () => {
       if (window.scrollY >= 480) {
         document.querySelectorAll(".feat > div").forEach((e) => {
@@ -53,8 +52,6 @@ export default {
         document.querySelectorAll(".feat > div")[2].style.background =
           " #4a98f7 ";
         document.querySelectorAll(".feat > div")[2].style.color = "  #fff ";
-
-        console.log(window.scrollY);
       } else if (window.scrollY < 480) {
         document.querySelectorAll(".feat > div").forEach((e) => {
           e.style.cssText = `top: -270px !important;transform: rotate(7deg)!important`;
@@ -66,12 +63,6 @@ export default {
         }
       }
     });
-  },
-
-  methods: {
-    handleScroll() {
-      console.log("handleScroll");
-    },
   },
 };
 </script>
