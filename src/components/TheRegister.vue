@@ -5,7 +5,7 @@
     style="z-index: 101; pointer-events: none"
   ></div>
   <div
-    class="container bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+    class="container m-0 bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
     style="z-index: 101"
   >
     <section>
@@ -26,7 +26,6 @@
           style="width: 25px"
         />
       </div>
-      <button @click="hash">hash</button>
       <v-sheet class="mx-auto">
         <v-form fast-fail @submit.prevent class="flex flex-wrap gap-2.5">
           <v-text-field
@@ -60,7 +59,7 @@
               style="padding: 10px"
               class="flex text-h6 font-weight-regular justify-space-between mb-2.5 gap-2.5"
             >
-              <v-avatar :v-text="step"></v-avatar>
+              <v-avatar v-text="step"></v-avatar>
               <span
                 style="
                   font-size: 20px;
@@ -480,17 +479,6 @@ export default {
     },
   },
   methods: {
-    hash() {
-      console.log("passwordWithHash");
-      const saltRounds = 10;
-      bcrypt.hash("1234", saltRounds, (err, hash) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log("كلمة المرور المشفرة:", hash);
-      });
-    },
     CloseTheRegister() {
       this.ShowHello = false;
       this.$emit("close_2");

@@ -46,6 +46,7 @@
                 <font-awesome-icon
                   :icon="['fab', 'facebook-f']"
                   class="text-4xl bg-[#1877f2]"
+                  style="font-size: 24px"
                 />
               </a>
             </li>
@@ -68,6 +69,7 @@
                 <font-awesome-icon
                   :icon="['fab', 'instagram']"
                   class="text-4xl bg-[#E4405F]"
+                  style="font-size: 24px"
                 />
               </a>
             </li>
@@ -99,6 +101,21 @@
             width: 70%;
           "
         >
+          <div
+            style="
+              background: #fafafa;
+              padding: 10px;
+              border-radius: 5px;
+              font-weight: bold;
+              color: var(--main-color);
+              height: 64px;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+            "
+          >
+            تواصل مع أكاديمية الإمام القانونية علي :
+          </div>
           <li>
             <a
               href="https://www.facebook.com/groups/546417753365502/?ref=share"
@@ -141,95 +158,19 @@
           </li>
         </ul>
       </div>
-      <div
-        class="copyright mt-2.5 w-100 p-2.5 text-center text-[var(--main-color)] text-bold w-100"
-        style="
-          border-top: 1px solid #ddd;
-          font-weight: bold;
-          padding: 0;
-          padding-top: 20px;
-        "
-      >
-        &copy; جميع الحقوق محفوظة لسالم تيم Salem Team
-      </div>
-      <!-- <div class="Feat_1 flex w-100 justify-between">
-        <a
-          href="https://www.facebook.com/groups/546417753365502/?ref=share"
-          class="feat flex flex-col gap-2.5 p-2.5 rounded w-24"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'facebook']"
-            class="text-4xl text-[#1877f2]"
-          />
-          <div class="text">أكاديمية الإمام القانونية</div>
-        </a>
-        <a
-          href="https://www.youtube.com/channel/UCOB7iG7oVlpsYfI5BwK_i8w"
-          class="feat flex flex-col gap-2.5 p-2.5 rounded w-24"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'youtube']"
-            class="text-4xl text-[#ff0000]"
-          />
-          <div class="text">أكاديمية الإمام القانونية</div>
-        </a>
-        <a
-          href="https://www.facebook.com/Dr-Mohamed-El-Emam-101533221382032/"
-          class="feat flex flex-col gap-2.5 p-2.5 rounded w-24"
-        >
-          <font-awesome-icon
-            :icon="['fab', 'facebook']"
-            class="text-4xl text-[#1877f2]"
-          />
-          <div class="text">د / محمد الإمام</div>
-        </a>
-        <a class="feat flex flex-col gap-2.5 p-2.5 rounded w-24">
-          <font-awesome-icon
-            :icon="['fas', 'phone']"
-            class="text-4xl text-[#25d366]"
-          />
-          <div class="text">
-            <div>01016317083 -</div>
-            <div>01555067049 -</div> 
-            <div>01222912524</div>
-          </div>
-        </a>
-      </div>
-      <div class="Feat_2">
-        <div class="text-center Copyright">
-          <div>
-            <p>
-              تصميم وتطوير بواسطة
-              <a href="https://www.facebook.com/profile.php?id=61551365201853">
-                <strong>سالم تيم</strong>
-              </a>
-            </p>
-            <p>
-              <a
-                href="https://www.facebook.com/profile.php?id=61551365201853"
-                id="fac"
-              >
-                <font-awesome-icon :icon="['fab', 'facebook']" />
-                قم بزيارة صفحتنا عبر الفيس بوك</a
-              >
-            </p>
-          </div>
-          <p>
-            <span>جميع الحقوق محفوظة &copy; 2024</span>
-            <a
-              class="text-reset fw-bold"
-              href="https://www.facebook.com/profile.php?id=61551365201853"
-              >
-              <img
-                src="../assets/SalemTeamLogo_2-removebg-preview.png"
-                alt="SalemTeam"
-                id="SalemTeam"
-                style="height: 60px"
-              />
-            </a>
-          </p>
-        </div>
-      </div> -->
+    </div>
+  </div>
+  <div
+    class="copyright p-2.5 text-center text-[var(--main-color)]"
+    style="
+      font-weight: bold;
+      padding: 10px;
+      background: var(--main-color);
+      color: #fff;
+    "
+  >
+    <div style="width: 90%; margin: auto">
+      &copy; جميع الحقوق محفوظة لسالم تيم Salem Team
     </div>
   </div>
 </template>
@@ -251,15 +192,6 @@ export default {
       justify-content: center;
       border: 1px solid var(--main-color);
     }
-    // .feat:last-child {
-    //   width: 100%;
-    //   flex-direction: row;
-    //   justify-content: space-between;
-    //   .text {
-    //     display: flex;
-    //     gap: 10px;
-    //   }
-    // }
   }
   .Feat_2 {
     width: 100%;
@@ -327,12 +259,13 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fafafa;
+  background: rgb(250 250 250 / 50%);
   padding: 10px;
   width: 100%;
   font-weight: bold;
   color: var(--main-color) !important;
   border-radius: 5px;
+  box-shadow: 0 0 10px #ddd;
 }
 .phone {
   display: flex;
@@ -357,6 +290,12 @@ export default {
       cursor: pointer;
     }
   }
+}
+.ContactUs {
+  background-image: url("../assets/WhatsApp Image 2023-12-04 at 11.00.58 PM.jpeg");
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
 }
 @media (min-width: 1200px) {
 }

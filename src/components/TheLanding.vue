@@ -32,13 +32,142 @@
           <div class="title_3">
             منصة الإمام منصة متخصصة في تدريس المواد القانونية
           </div>
-          <div style="z-index: 1; width: fit-content">
+          <div
+            class="All_btn"
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 10px;
+            "
+          >
+            <button @click="dialog = true">
+              <font-awesome-icon :icon="['fas', 'scale-balanced']" />
+              <span>مجالات العمل بعد التخرج</span>
+            </button>
+            <button @click="dialog_2 = true">
+              <font-awesome-icon :icon="['fas', 'circle-question']" />
+              <span>لماذا تختار كلية الشريعة و القانون</span>
+            </button>
+          </div>
+          <div
+            class="main_Overlay"
+            @click="dialog = false"
+            style="z-index: 101"
+            v-if="dialog"
+          ></div>
+          <div
+            class="main_Overlay"
+            @click="dialog_2 = false"
+            style="z-index: 101"
+            v-if="dialog_2"
+          ></div>
+          <div
+            class="dialog bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+            v-if="dialog"
+            style="z-index: 101; width: 90%"
+          >
+            <div
+              class="header"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 20px;
+                font-weight: bold;
+                color: var(--main-color);
+                padding: 10px;
+                background: #fafafa;
+                margin-bottom: 10px;
+              "
+            >
+              <div>مجالات العمل بعد التخرج</div>
+              <font-awesome-icon
+                @click="dialog = false"
+                class="text-2xl text-[--main-color]"
+                :icon="['fas', 'xmark']"
+              />
+            </div>
+            <div
+              class="body"
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+              "
+            >
+              <div
+                class="box"
+                v-for="data in data_1"
+                :key="data"
+                style="
+                  width: 32%;
+                  background: #fafafa;
+                  padding: 10px;
+                  text-align: center;
+                  color: var(--main-color);
+                  font-weight: bold;
+                  font-size: 14px;
+                "
+              >
+                {{ data }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="dialog_2 bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+            v-if="dialog_2"
+            style="z-index: 101; width: 90%"
+          >
+            <div
+              class="header"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--main-color);
+                padding: 10px;
+                background: #fafafa;
+                margin-bottom: 10px;
+              "
+            >
+              <div>لماذا تختار كلية الشريعة و القانون ؟</div>
+              <font-awesome-icon
+                @click="dialog_2 = false"
+                class="text-2xl text-[--main-color]"
+                :icon="['fas', 'xmark']"
+              />
+            </div>
+            <div class="body">
+              <div
+                style="
+                  line-height: 2;
+                  background: #fafafa;
+                  padding: 10px;
+                  border-radius: 5px;
+                  color: var(--main-color);
+                  font-weight: bold;
+                  font-size: 15px;
+                "
+              >
+                كلية الشريعة والقانون هي من الكليات ذات الشأن العالى والرفعة في
+                مصر، وهي إحدى أقدم وأعرق كليات جامعة الأزهر وهي كلية خاصة بدراسة
+                العلوم الشرعية (الفقه والفقه المقارن وأصول الفقه) إضافة إلى مواد
+                العلوم القانونية (القانون الجنائي والقانون الدستوري والقانون
+                المدني والقانون الدولي... إلخ)والتي تماثل تلك المواد التي يتم
+                تدريسها في كليات الحقوق مما أكسب هذه الكلية ميزةَ الجمع بين
+                العلوم الدينية " المتمثلة في المواد الشرعية. والعلوم الدنيوية "
+                المتمثلة في المواد القانونية.
+              </div>
+            </div>
+          </div>
+          <!-- <div style="z-index: 1; width: fit-content">
             <v-dialog v-model="dialog">
               <template v-slot:activator="{ props }">
-                <div v-bind="props" class="button_2 p-0">
-                  <font-awesome-icon :icon="['fas', 'scale-balanced']" />
-                  <span>مجالات العمل بعد التخرج</span>
-                </div>
+                <div v-bind="props" class="button_2 p-0"></div>
               </template>
               <v-card>
                 <div
@@ -74,13 +203,14 @@
                 </v-card-text>
               </v-card>
             </v-dialog>
-          </div>
-          <div style="z-index: 1; width: fit-content">
+          </div> -->
+
+          <!-- <div style="z-index: 1; width: fit-content">
             <v-dialog v-model="dialog2">
               <template v-slot:activator="{ props }">
                 <div v-bind="props" class="button_2 p-0">
                   <font-awesome-icon :icon="['fas', 'circle-question']" />
-                  <span>لماذا تختار كلية الشريعة و القانون</span>
+                  <span></span>
                 </div>
               </template>
               <v-card>
@@ -94,10 +224,7 @@
                   "
                 >
                   <v-card-title>
-                    <div class="title_1_1 flex items-center gap-2.5">
-                      <font-awesome-icon :icon="['fas', 'circle-question']" />
-                      <span>لماذا تختار كلية الشريعة و القانون</span>
-                    </div>
+                    <div class="title_1_1 flex items-center gap-2.5"></div>
                   </v-card-title>
 
                   <font-awesome-icon
@@ -117,19 +244,19 @@
                       padding: 10px;
                     "
                   >
-                    كلية الشريعة والقانون هي من الكليات ذات الشأن العالى والرفعه
-                    في مصر، وهي إحدى أقدم وأعرق كليات جامعة الأزهر وهي كلية خاصة
+                    كلية الشريعة والقانون هي من الكليات ذات الشأن العالى والرفعة
+                    في مصر، وهي إحدى أقدم وأعرق كليات جامعة الأزةر وهي كلية خاصة
                     بدراسة العلوم الشرعية (الفقه والفقه المقارن وأصول الفقه)
                     إضافة إلى مواد العلوم القانونية (القانون الجنائي والقانون
                     الدستوري والقانون المدني والقانون الدولي... إلخ)والتي تماثل
                     تلك المواد التي يتم تدريسها في كليات الحقوق مما أكسب هذه
                     الكلية ميزةَ الجمع بين العلوم الدينية " المتمثلة في المواد
-                    الشرعية. والعلوم الدنيوية " المتمثله في المواد القانونية.
+                    الشرعية. والعلوم الدنيوية " المتمثلة في المواد القانونية.
                   </div>
                 </v-card-text>
               </v-card>
             </v-dialog>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -141,25 +268,25 @@ export default {
   data() {
     return {
       dialog: false,
-      dialog2: false,
+      dialog_2: false,
       data_1: [
-        "معيدا بكليه (يعني دكتور جامعي )",
+        "معيدا بالكلية ( دكتور جامعي )",
         "الهيئات القضائية",
-        "مجلس الدوله",
-        "النيابه العامه",
-        "النيابه الاداريه",
-        "هيئه قضايا الدوله",
-        "الالتحاق بكليه الشرطه(ضباط متخصصين )",
-        "الكليه الحربيه النيابه العسكريه",
+        "مجلس الدولة",
+        "النيابة العامة",
+        "النيابة الادارية",
+        "هيئة قضايا الدولة",
+        " كلية الشرطة ( ضباط متخصصين )",
+        "الكلية الحربية ( النيابة العسكرية ) ",
         "مأذون شرعي",
-        "وزاره الخارجيه (سفير )",
-        "وزاره التموين والتجارة الداخلية",
-        "الرقابه الإدارية",
+        "وزارة الخارجية ( سفير )",
+        "وزارة التموين والتجارة الداخلية",
+        "الرقابة الإدارية",
         "الجهاز المركزي للمحاسبات",
         "مصلحة الضرائب",
         "الشئون القانونية",
-        "المحاماه",
-        "وظائف اخري بقطاعات العامه والخاصه",
+        "المحاماة",
+        "وظائف اخري بقطاعات عامة و خاصة",
         "وزارة الأوقاف",
         "وزير",
       ],
@@ -251,6 +378,21 @@ img {
 .v-card .v-card-title {
   padding: 0 !important;
 }
+.All_btn > button {
+  border: 1px solid var(--main-color);
+  border-radius: 5px;
+  color: var(--main-color);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  transition: 0.3s;
+  &:hover {
+    background: var(--main-color);
+    color: #fff;
+  }
+}
 @media (min-width: 1200px) {
 }
 
@@ -276,6 +418,9 @@ img {
     flex-direction: column;
     & > div {
       width: 100%;
+    }
+    .box {
+      width: 48% !important;
     }
   }
 }

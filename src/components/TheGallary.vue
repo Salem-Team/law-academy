@@ -1,7 +1,43 @@
 <template>
-  <div id="TheGallary" class="TheGallary">
-    <div class="container">
-      <div class="main_title">معرض الصور</div>
+  <div
+    id="TheGallary"
+    class="TheGallary"
+    style="background: #fafafa; padding: 10px; margin-top: 50px"
+  >
+    <div class="container relative">
+      <div
+        style="
+          text-align: center;
+          margin: 50px auto;
+          font-size: 24px;
+          font-weight: bold;
+        "
+      >
+        معرض الصور
+      </div>
+      <div
+        class="flex items-center gap-2.5 hover-0 p-2.5 cursor-pointer text-center text-xl"
+        @click="Add_Img = true"
+        v-if="ShowBtnToUser === 'Admin'"
+        style="
+          font-weight: bold;
+          border-radius: 5px;
+          padding: 5px 15px;
+          border: 1px solid var(--main-color);
+          color: var(--main-color);
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease 0s;
+          position: absolute;
+          top: 0;
+          left: 10px;
+        "
+      >
+        <font-awesome-icon :icon="['fas', 'plus']" />
+      </div>
       <div class="main_Overlay" v-if="Add_Img"></div>
       <div
         v-if="Add_Img"
@@ -63,21 +99,6 @@
           >
             في الأكاديمية
           </div>
-        </div>
-        <div
-          class="flex items-center gap-2.5 hover-0 p-2.5 cursor-pointer text-center text-xl"
-          @click="Add_Img = true"
-          v-if="ShowBtnToUser === 'Admin'"
-          style="
-            font-weight: bold;
-            border-radius: 5px;
-            padding: 5px 15px;
-            border: 1px solid var(--main-color);
-            color: var(--main-color);
-          "
-        >
-          <font-awesome-icon :icon="['fas', 'plus']" />
-          <span>اضف صورة</span>
         </div>
       </div>
       <div class="box flex justify-start gap-2.5 flex-wrap">
@@ -487,9 +508,7 @@ export default {
 .Main_Img:hover {
   transform: scale(1.03);
 }
-svg {
-  transition: 0.3s;
-}
+
 svg:hover {
   opacity: 1 !important;
 }

@@ -1,9 +1,107 @@
 <template>
   <div class="ShowTest">
+    <div
+      class="main_Overlay"
+      v-if="MyResult"
+      @click="MyResult = !MyResult"
+      style="z-index: 1000"
+    ></div>
+    <div
+      class="result"
+      v-if="MyResult"
+      style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background: rgb(255, 255, 255);
+        width: 95%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        padding: 10px;
+        border-radius: 5px;
+      "
+    >
+      <div class="flex items-center justify-between">
+        <span
+          style="
+            font-size: 25px;
+            font-weight: bold;
+            font-family: system-ui;
+            color: var(--main-color);
+          "
+        >
+          نتيجتك
+        </span>
+        <font-awesome-icon
+          :icon="['fas', 'rectangle-xmark']"
+          @click="CloseMyResult()"
+          style="
+            font-size: 25px;
+            font-weight: bold;
+            font-family: system-ui;
+            color: var(--main-color);
+          "
+        />
+      </div>
+      <div class="body mt-2.5">
+        <div>
+          <div>درجتك</div>
+          <div>{{ result }} / {{ Allresult }}</div>
+        </div>
+        <div>
+          <div>التقدير</div>
+          <div>
+            {{ appreciation }}
+          </div>
+        </div>
+        <div>
+          <div>النسبة المئوية</div>
+          <div>{{ percent }}%</div>
+        </div>
+        <div>
+          <div style="background: #0088ff">
+            <div></div>
+          </div>
+          <div>لون الإجابة الصحيحة</div>
+        </div>
+      </div>
+      <div
+        class="footer"
+        style="
+          background: #fafafa;
+          margin-top: 10px;
+          text-align: center;
+          font-weight: bold;
+
+          cursor: pointer;
+          border: 1px solid var(--main-color);
+        "
+      >
+        <router-link
+          to="/TheUser"
+          style="
+            color: var(--main-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+          "
+        >
+          <font-awesome-icon
+            :icon="['fas', 'square-poll-vertical']"
+            class="text-[--main-color]"
+          />
+          <div>الإطلاع علي نتائجك و إحصائياتك</div>
+        </router-link>
+      </div>
+    </div>
     <div class="main_Overlay z-10" style="z-index: 101"></div>
     <div
-      class="container rounded p-2.5 bg-white fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 overflow-auto z-20"
-      style="z-index: 101; height: auto"
+      class="container v_2 rounded p-2.5 bg-white fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 overflow-auto z-20"
+      style="z-index: 101"
     >
       <div
         class="header flex justify-between border-b border-[#eee] mb-2.5 p-2.5 rounded items-center"
@@ -13,6 +111,7 @@
           :icon="['fas', 'xmark']"
           class="bg-[red] rounded text-white py-1 px-2.5"
           @click="OpenCheck"
+          style="font-size: 20px"
         />
       </div>
       <div class="main_Overlay" v-if="ShowCheck" @click="CloseCheck"></div>
@@ -150,14 +249,14 @@
         <div v-if="TestState">
           <div
             style="
-              font-size: 35px;
+              font-size: 30px;
               font-family: system-ui;
               color: var(--main-color);
               font-weight: bold;
               font-family: system-ui;
             "
           >
-            ملاحظات هامة قبل بدأ الإختبار :
+            ملاحظات هامة :
           </div>
           <div class="countain py-2.5 flex flex-col gap-2.5">
             <div class="flex items-center gap-2.5">
@@ -165,33 +264,25 @@
                 :icon="['fas', 'clock']"
                 class="text-[--main-color]"
               />
-              <span
-                >الإختبار بوقت محدد بمعدل دقيقة و نصف لكل سؤال وقت الإختبار ({{
-                  this.Qu.length * 1.5 || 0
-                }}
-                دقيقة )</span
-              >
-            </div>
-            <div class="flex items-center gap-2.5">
-              <font-awesome-icon
-                :icon="['fas', 'square-poll-vertical']"
-                class="text-[--main-color]"
-              />
-              <span>يتم حساب نتيجة أول أختبار فقط</span>
+              <span>وقت الإختبار ({{ this.Qu.length * 1.5 || 0 }} دقيقة )</span>
             </div>
             <div class="flex items-center gap-2.5">
               <font-awesome-icon
                 :icon="['fas', 'thumbs-up']"
                 class="text-[--main-color]"
               />
-              <span
-                >بمجرد ضغطك علي زر البدأ يتم احتساب النتيجة حتي بعد إغلاقك
-                للإختبار</span
-              >
+              <span>يتم حساب نتيجة أول أختبار فقط</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <font-awesome-icon
+                :icon="['fas', 'square-poll-vertical']"
+                class="text-[--main-color]"
+              />
+              <span> يمكنك الإطلاع علي جميع النتائج من حسابك </span>
             </div>
           </div>
           <div
-            class="button border p-3 text-center cursor-pointer mt-2.5 hover-0"
+            class="button border p-2.5 text-center cursor-pointer mt-2.5 hover-0"
             @click="StarTest"
             style="
               border: 1px solid var(--main-color) !important;
@@ -208,8 +299,33 @@
       </div>
       <div class="body mt-2.5" v-if="StarTestState">
         <div class="flex items-center p-2.5 bg-[#eee] justify-between">
-          <p>{{ formatTime }}</p>
-          <div>({{ this.Qu.length }}) سؤال</div>
+          <div
+            style="
+              padding: 5px 10px;
+              background: #fff;
+              border-radius: 5px;
+              color: var(--main-color);
+              font-weight: bold;
+            "
+          >
+            ({{ this.Qu.length }}) سؤال
+          </div>
+          <div
+            class="flex gap-2.5 align-center"
+            style="
+              background: #fff;
+              padding: 5px 10px;
+              border-radius: 5px;
+              font-weight: bold;
+              color: var(--main-color);
+            "
+          >
+            <font-awesome-icon
+              :icon="['fas', 'clock']"
+              class="text-[--main-color]"
+            />
+            <p>{{ formatTime }}</p>
+          </div>
         </div>
         <img
           src="../assets/animation_lolk2w1w_small.gif"
@@ -246,80 +362,19 @@
             </div>
           </div>
         </div>
-        <div class="error text-[red] text-center p-2.5" v-if="ErrorActive">
+        <div
+          class="error text-[red] text-center p-2.5"
+          style="font-weight: bold"
+          v-if="ErrorActive"
+        >
           أكمل الأسئلة
         </div>
 
         <div
-          class="showresult bg-[--main-color] p-2.5 text-center cursor-pointer text-white"
+          class="showresult bg-[--main-color] p-2.5 text-center cursor-pointer text-white rounded"
           @click="ShowResult"
         >
           النتيجة
-        </div>
-        <div
-          class="main_Overlay"
-          v-if="MyResult"
-          @click="MyResult = !MyResult"
-        ></div>
-        <div
-          class="result"
-          v-if="MyResult"
-          style="
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            background: rgb(255, 255, 255);
-            width: 95%;
-            transform: translate(-50%, -50%);
-            z-index: 101;
-            padding: 10px;
-            border-radius: 5px;
-          "
-        >
-          <div class="flex items-center justify-between">
-            <span
-              style="
-                font-size: 25px;
-                font-weight: bold;
-                font-family: system-ui;
-                color: var(--main-color);
-              "
-            >
-              نتيجتك
-            </span>
-            <font-awesome-icon
-              :icon="['fas', 'rectangle-xmark']"
-              @click="CloseMyResult()"
-              style="
-                font-size: 25px;
-                font-weight: bold;
-                font-family: system-ui;
-                color: var(--main-color);
-              "
-            />
-          </div>
-          <div class="body mt-2.5">
-            <div>
-              <div>درجتك :</div>
-              <div>{{ result }} / {{ Allresult }}</div>
-            </div>
-            <div>
-              <div>التقدير :</div>
-              <div>
-                {{ appreciation }}
-              </div>
-            </div>
-            <div>
-              <div>النسبة المئوية :</div>
-              <div>{{ percent }}%</div>
-            </div>
-            <div>
-              <div>
-                <div class="color"></div>
-              </div>
-              <div>لون الإجابة الصحيحة</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -510,6 +565,7 @@ export default {
       this.StarTestState = true;
       this.TestState = false;
       this.GetData();
+      document.querySelector(".container.v_2").style.maxHeight = "90%";
     },
     ShowQuFunction() {
       this.formatTime === "0 دقيقة 0 ثانية ";
@@ -716,6 +772,9 @@ export default {
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
+  &.v_2 {
+    height: auto;
+  }
 }
 .active {
   background: var(--main-color);
@@ -740,9 +799,8 @@ h3 {
 }
 .countain {
   > div {
-    // flex-direction: column;
     align-items: center;
-    /* border: 1px solid #ddd; */
+    box-shadow: 0 0 10px #ddd;
     background: #fafafa;
     padding: 7px 10px;
     border-radius: 5px;
@@ -755,6 +813,10 @@ h3 {
     }
     svg {
       font-size: 17px;
+      background: var(--main-color);
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
     }
   }
 }

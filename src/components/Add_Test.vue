@@ -2,50 +2,102 @@
   <div class="Add_Test">
     <div class="main_Overlay" style="z-index: 101" @click="CloseAddTest"></div>
     <div
-      class="container rounded p-2.5 bg-white fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 overflow-auto z-10 h-90"
-      style="z-index: 101"
+      class="container rounded bg-white fixed -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 overflow-auto z-10 h-90"
+      style="z-index: 101; padding: 15px 10px"
     >
-      <div class="head text-left flex justify-between mb-2.5">
-        <span>أضف اختبار</span>
+      <div
+        class="head text-left flex justify-between mb-2.5"
+        style="
+          font-size: 20px;
+          align-items: center;
+          font-weight: bold;
+          color: var(--main-color);
+          background: #fafafa;
+          padding: 10px;
+          border-radius: 5px;
+        "
+      >
+        <span>إضافة إختبار</span>
         <font-awesome-icon :icon="['fas', 'xmark']" @click="CloseAddTest" />
       </div>
       <div class="body flex flex-col gap-2.5">
-        <div class="feat border p-2.5 rounded">
-          <div>ميعاد الإختبار</div>
-          <div class="flex flex-wrap justify-between">
-            <div class="form-floating text-end w-48 mt-2.5">
+        <div class="feat p-2.5 rounded">
+          <div class="flex flex-wrap justify-between flex-col">
+            <div class="form-floating text-end w-100 mt-2.5">
               <input
                 type="time"
                 class="form-control"
                 id="Time"
                 v-model="selectedTime"
+                style="
+                  border: 1px solid var(--main-color);
+                  border-radius: 5px;
+                  color: var(--main-color);
+                  font-weight: bold;
+                "
               />
               <label for="Time">وقت الإختبار</label>
             </div>
-            <div class="form-floating text-end w-48 mt-2.5">
-              <v-container>
+            <div class="form-floating text-end mt-2.5 w-100">
+              <v-container
+                style="
+                  width: 100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
                 <v-date-picker
                   v-model="selectedDate"
                   show-adjacent-months
                 ></v-date-picker>
-                <div class="text-right">
-                  تاريخ الإختبار : {{ formatDate(selectedDate) }}
-                </div>
               </v-container>
             </div>
           </div>
         </div>
-        <div class="feat border p-2.5 rounded">
-          <div>نوع الإختبار</div>
+        <div
+          class="text-right"
+          style="
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: var(--main-color);
+          "
+        >
+          تاريخ الإختبار :
+          {{ formatDate(selectedDate) }}
+        </div>
+        <div class="feat p-2.5 rounded">
           <div class="type flex flex-wrap justify-between">
             <div
-              class="p-2.5 border cursor-pointer mt-2.5 flex gap-2.5 w-48 items-center type"
+              class="p-2.5 hover-0 cursor-pointer mt-2.5 flex gap-2.5 w-48 items-center type ActiveClass"
+              style="
+                color: var(--main-color);
+                font-weight: bold;
+                border: 1px solid var(--main-color);
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
             >
               <font-awesome-icon :icon="['fas', 'thumbs-up']" />
               <span>مجاني</span>
             </div>
             <div
-              class="p-2.5 border cursor-pointer mt-2.5 flex gap-2.5 w-48 items-center type"
+              class="p-2.5 hover-0 cursor-pointer mt-2.5 flex gap-2.5 w-48 items-center type"
+              style="
+                color: var(--main-color);
+                font-weight: bold;
+                border: 1px solid var(--main-color);
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+              "
             >
               <font-awesome-icon :icon="['fas', 'coins']" /> <span>مدفوع</span>
             </div>
@@ -53,12 +105,14 @@
         </div>
       </div>
 
-      <div class="button text-left mt-5">
-        <span
+      <div class="w-100 mt-5 text-center">
+        <div
           class="bg-[--main-color] text-white p-2.5 rounded cursor-pointer"
           @click="AddData"
-          >تم</span
+          style="font-size: 18px"
         >
+          تم
+        </div>
       </div>
     </div>
   </div>
@@ -81,7 +135,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 import moment from "moment";
-import "moment/locale/ar";
+// import "moment/locale/ar";
 export default {
   name: "Add_Test",
 
@@ -90,6 +144,7 @@ export default {
       selectedTime: "",
       formattedTime: "",
       selectedDate: null,
+      Time: null,
     };
   },
   mounted() {
@@ -118,16 +173,16 @@ export default {
     },
     formatDate(date) {
       if (!date) return "";
-      return moment(date).locale("ar").format("DD/MM/YYYY");
+      return moment(date).format("DD/MM/YYYY");
     },
 
     async AddData() {
-      moment.locale("ar");
-      const formattedTime = moment(this.selectedTime, "hh:mm A")
-        .locale("ar")
+      let formattedTime = moment(this.selectedTime, "hh:mm A")
+        // .locale("ar")
         .format("HH:mm");
 
       // قم بطباعة الوقت المنسق
+
       const newData = {
         Time: formattedTime,
         Date: this.formatDate(this.selectedDate),
@@ -164,6 +219,9 @@ export default {
 <style>
 .ActiveClass {
   background: var(--main-color);
-  color: #fff;
+  color: #fff !important;
+}
+.v-picker-title {
+  display: none;
 }
 </style>

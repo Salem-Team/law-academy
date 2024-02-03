@@ -1,5 +1,13 @@
 <template>
-  <div class="section" style="margin-top: 125px">
+  <div
+    class="section"
+    style="
+      margin-top: 125px;
+      margin-top: 125px;
+      background: #fafafa;
+      padding: 30px 10px;
+    "
+  >
     <div class="container flex align-center justify-center">
       <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
         <img src="../assets/exam.png" alt="exam" />
@@ -13,8 +21,6 @@
         <img src="../assets/clock.png" alt="clock" />
         <div class="caption_3">امتحانات بمؤقت ونتائج فوريه</div>
       </div>
-      <div class="images"></div>
-      <div id="text" class="moving-element" ref="movingElement"></div>
     </div>
   </div>
 </template>
@@ -34,19 +40,30 @@ export default {
   mounted() {
     console.log("المكون قد تم تحميله بنجاح");
     window.addEventListener("scroll", () => {
-      if (window.scrollY >= 395) {
+      if (window.scrollY >= 480) {
         document.querySelectorAll(".feat > div").forEach((e) => {
           e.style.cssText = `top: 10px !important;transform: rotate(0deg)!important`;
         });
+        document.querySelectorAll(".feat > div")[0].style.background =
+          "#fff5f5";
+        document.querySelectorAll(".feat > div")[1].style.background =
+          " #017296 ";
+        document.querySelectorAll(".feat > div")[1].style.color = "  #fff ";
+        ("#fff5f5");
+        document.querySelectorAll(".feat > div")[2].style.background =
+          " #4a98f7 ";
+        document.querySelectorAll(".feat > div")[2].style.color = "  #fff ";
 
         console.log(window.scrollY);
-      } else if (window.scrollY < 395) {
+      } else if (window.scrollY < 480) {
         document.querySelectorAll(".feat > div").forEach((e) => {
           e.style.cssText = `top: -270px !important;transform: rotate(7deg)!important`;
         });
-        document.querySelector(
-          ".caption_2"
-        ).style.cssText = `transform: rotate(-7deg)!important`;
+        if (document.querySelector(".caption_2")) {
+          document.querySelector(
+            ".caption_2"
+          ).style.cssText = `transform: rotate(-7deg)!important`;
+        }
       }
     });
   },
@@ -67,7 +84,7 @@ img {
 }
 .feat {
   > div {
-    background: #fafafa;
+    background: #fff;
     padding: 10px;
     width: 260px;
     border-radius: 5px;
@@ -95,7 +112,7 @@ img {
   .section {
     .container {
       flex-direction: column;
-      gap: 50px;
+      gap: 60px;
       .feat {
         width: 100% !important;
       }
