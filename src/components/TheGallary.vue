@@ -253,7 +253,6 @@ export default {
     setInterval(() => {
       this.CheckAboutAdminState();
     }, 1000);
-    this.CheckAboutAdminState();
     setTimeout(() => {
       this.GetAdminState();
       this.GetData();
@@ -287,11 +286,6 @@ export default {
       tab: null,
       value: 1,
       img: [],
-      // "https://scontent.fcai16-1.fna.fbcdn.net/v/t39.30808-6/406489843_792872509517967_1297581263697999196_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=c42490&_nc_ohc=Jpw6LuZ61J0AX-rvDl1&_nc_ht=scontent.fcai16-1.fna&oh=00_AfDwM2SSTTB8qlqd34NqnxOsjIRz0fxCVQnxwXHvVqZwww&oe=657A1838",
-      // "https://scontent.fcai16-1.fna.fbcdn.net/v/t39.30808-6/406526774_793684099436808_7586636419559248211_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=c42490&_nc_ohc=4ighKk_26XsAX8YXDMp&_nc_ht=scontent.fcai16-1.fna&oh=00_AfC6jj8daRBJXu0QbVp9lkhLwZeIogZQ7Kom0HmDaMRDjg&oe=657B6C54",
-      // "https://scontent.fcai16-1.fna.fbcdn.net/v/t39.30808-6/404331592_784878700317348_1282460817674185613_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=c42490&_nc_ohc=sI1X8efE_FsAX-AGJSl&_nc_ht=scontent.fcai16-1.fna&oh=00_AfCrrDw_ojpkg5asqCRpsiAooCWzY0Fvg6d7IZgch94U6g&oe=657AAB3E",
-      // "https://scontent.fcai16-1.fna.fbcdn.net/v/t39.30808-6/401791080_779827404155811_402491244374509482_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=c42490&_nc_ohc=HZetVBBvb54AX98GjQ6&_nc_ht=scontent.fcai16-1.fna&oh=00_AfBcl5F56BKYmoDT4kc-tA1rNkZL9vPk3J3tQunoTlB4CA&oe=657BFB27",
-      // "https://scontent.fcai16-1.fna.fbcdn.net/v/t39.30808-6/400102107_775423324596219_7386782142255727679_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=c42490&_nc_ohc=EJzJdgKG-DMAX8ZrTlH&_nc_ht=scontent.fcai16-1.fna&oh=00_AfD9SJoRA9vMd1nzDbjZmKUmg_MWB6pUh5dzLEfknkkn5A&oe=657A9104",
       showModalFlag: false,
       currentIndex: 0,
       Link: "",
@@ -351,58 +345,54 @@ export default {
         });
       }
     },
+    ShowBtnMore() {
+      let DivNotHidden = document.querySelectorAll(".box > div:not(.hidden)");
+      if (DivNotHidden.length > 6) {
+        DivNotHidden.forEach((e, index) => {
+          if (index >= 6) {
+            e.classList.add("hidden");
+          }
+        });
+        this.More = true;
+        setTimeout(() => {
+          document.querySelector(".More").onclick = () => {
+            this.More = false;
+            DivNotHidden.forEach((e) => {
+              e.classList.remove("hidden");
+            });
+          };
+        }, 10);
+      }
+    },
     Select() {
       let btn = document.querySelectorAll(".buttons > div>  div ");
-      setTimeout(() => {
-        console.log(document.querySelectorAll(".box > div").length);
-        if (document.querySelectorAll(".box > div").length >= 6) {
-          document.querySelectorAll(".box > div").forEach((e, index) => {
-            if (index >= 6) {
-              console.log(e);
-              e.classList.add("hidden");
-            }
-          });
-          this.More = true;
-          setTimeout(() => {
-            document.querySelector(".More").onclick = () => {
-              this.More = false;
-              document.querySelectorAll(".box > div").forEach((e) => {
-                e.classList.remove("hidden");
-              });
-            };
-          }, 10);
-        }
-      }, 100);
+
       for (let i = 0; i < btn.length; i++) {
         btn[i].onclick = () => {
           btn.forEach((e) => {
             e.classList.remove("active");
           });
           btn[i].classList.add("active");
-          console.log(btn[i].innerHTML);
-          // console.log(e.classList[3]);
 
-          // console.log(`${e.classList[2]} ${e.classList[3]}`);
-          // console.log(e.classList[3]);
+          // setInterval(() => {
           document.querySelectorAll(".box > div").forEach((e) => {
-            if (e.classList[3] === "تكريم" && btn[i].innerHTML === " تكريم ") {
+            if (
+              e.classList[4] + " " + e.classList[5] === "في الأكاديمية" &&
+              btn[i].innerHTML === " في الأكاديمية "
+            ) {
               document.querySelectorAll(".box > div").forEach((ele) => {
                 ele.classList.add("hidden");
               });
               setTimeout(() => {
                 e.classList.remove("hidden");
               }, 10);
-            }
-          });
-          document.querySelectorAll(".box > div").forEach((e) => {
-            if (
-              `${e.classList[3]} ${e.classList[4]}` === "في الأكاديمية" &&
-              btn[i].innerHTML === " في الأكاديمية "
+            } else if (
+              e.classList[4] === "تكريم" &&
+              btn[i].innerHTML === " تكريم "
             ) {
               document.querySelectorAll(".box > div").forEach((ele) => {
                 ele.classList.add("hidden");
               });
-              console.log(e);
               setTimeout(() => {
                 e.classList.remove("hidden");
               }, 10);
@@ -413,7 +403,14 @@ export default {
                 });
               }, 10);
             }
+            setTimeout(() => {
+              this.ShowBtnMore();
+            }, 50);
+            // else {
+            //   console.log("wronge");
+            // }
           });
+          // }, 100);
         };
       }
     },
@@ -426,8 +423,13 @@ export default {
         Arr.push(doc.data());
       });
       this.img = Arr;
-      this.Select();
+      setTimeout(() => {
+        this.Select();
+      }, 100);
       console.log(this.img.length);
+      setTimeout(() => {
+        this.ShowBtnMore();
+      }, 50);
     },
     async AddImg() {
       if (this.Link.length > 10) {
@@ -440,6 +442,14 @@ export default {
         this.Link = "";
         this.Add_Img = false;
         this.GetData();
+        let btn = document.querySelectorAll(".buttons > div>  div ");
+
+        for (let i = 0; i < btn.length; i++) {
+          btn.forEach((e) => {
+            e.classList.remove("active");
+          });
+          btn[0].classList.add("active");
+        }
       }
     },
     showModal(index) {

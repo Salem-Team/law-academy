@@ -14,8 +14,6 @@
           <font-awesome-icon :icon="['fas', 'id-card']" />
           <span>حسابي</span>
         </div>
-        <!-- v-show="ShowAppreciations" -->
-        <!-- v-if="RankingShow" -->
 
         <v-skeleton-loader
           :loading="loading"
@@ -98,7 +96,7 @@
                     padding: 5px;
                   "
                 >
-                  {{ Ranking }}
+                  {{ Ranking || 0 }}
                   علي {{ AllStudent }} طالب
                 </div>
               </div>
@@ -231,7 +229,7 @@
       <div class="User_file flex items-center">
         <div
           class="data w-1/2 flex flex-col gap-2.5"
-          style="padding: 10px; border-radius: 5px"
+          style="border-radius: 5px"
         >
           <div
             class="name"
@@ -326,12 +324,14 @@
           </v-progress-circular>
           <div
             style="
-              background: #fafafa;
-              width: 100px;
-              padding: 5px;
+              background: rgb(250, 250, 250);
               border-radius: 5px;
               font-size: 20px;
               min-height: 42px;
+              min-width: 130px;
+              transition: 0.3s;
+              border: 1px solid var(--main-color);
+              background: #fff;
             "
             class="ranking"
           >
@@ -341,11 +341,11 @@
                 font-size: 20px;
                 font-weight: bold;
                 color: var(--main-color);
-                border: 1px solid var(--main-color);
                 border-radius: 5px;
+                padding: 5px 10px;
               "
             >
-              {{ Appreciations }}
+              {{ Appreciations || "ضعيف جدا" }}
             </div>
           </div>
         </div>
@@ -410,6 +410,7 @@ export default {
 
   mounted() {
     this.GetData();
+    this.RankingShow = true;
     this.State();
     setTimeout(() => {
       this.DisplayNone();
@@ -469,10 +470,10 @@ export default {
       }
     },
     Progress() {
+      this.ShowAppreciations = true;
       if (!isNaN(Math.round(+this.TotalResult))) {
         this.interval = setInterval(() => {
           if (this.value === Math.round(+this.TotalResult) || 0) {
-            this.ShowAppreciations = true;
             return (this.value = Math.round(+this.TotalResult) || 0);
           }
           this.value += 1;
@@ -636,7 +637,7 @@ export default {
         `;
         this.phone = user.phone;
         this.email = user.email;
-        this.college_place = user.college_place;
+        this.college_place = user.College_place;
         this.Class = user.Class;
         this.Lang = user.Lang;
         this.TypeOfClass = user.TypeOfClass;

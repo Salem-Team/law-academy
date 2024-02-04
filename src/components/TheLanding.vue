@@ -1,7 +1,7 @@
 <template>
   <div
     class="TheLanding p-2.5"
-    style="margin: 0; min-height: 122vh; padding-bottom: 50px"
+    style="margin: 0; min-height: 110vh; padding-bottom: 50px"
   >
     <div class="container relative" style="margin-top: 140px">
       <!-- <div class="flex justify-end w-100 absolute bottom-14 left-0">

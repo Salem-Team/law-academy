@@ -49,7 +49,6 @@
                   <div class="user">
                     <div class="user">
                       <div
-                        v-if="m"
                         style="
                           background: #fff;
                           color: var(--main-color);
@@ -62,7 +61,7 @@
                       >
                         <v-list-item-title class="flex align-center gap-1.5">
                           <span>👋🏻</span>
-                          <span> أهلا {{ thetype }} {{ UserName }} </span>
+                          <span> أهلا {{ UserName }} </span>
                         </v-list-item-title>
                       </div>
                       <div
@@ -251,7 +250,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 export default {
   name: "TheHeader",
-  emits: ["State"],
+  emits: ["getAdminState", "checkAboutUserState", "State"],
   mounted() {
     this.UserStateFunction();
     this.CheckAboutUserState();
@@ -409,14 +408,31 @@ export default {
         }, 2000);
       }, 1010);
     },
-    UserStateFunction() {
+    async UserStateFunction() {
       this.state = null;
-      this.thetype = "";
-      this.UserName = `${localStorage.getItem("username_1")} 
-        ${localStorage.getItem("username_2") || ""} 
-        ${localStorage.getItem("username_3") || ""}`;
       this.UserState = localStorage.getItem("userid") ? true : false;
       if (this.UserState) {
+        const docRef = doc(db, "الطلاب", localStorage.getItem("userid"));
+        const docSnap = await getDoc(docRef);
+        let Name;
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          Name = `${docSnap.data().name_1} ${docSnap.data().name_2} ${
+            docSnap.data().name_3
+          }`;
+        } else {
+          const docRef = doc(db, "المشرفين", localStorage.getItem("userid"));
+          const docSnap = await getDoc(docRef);
+          // docSnap.data() will be undefined in this case
+          console.log("No such document!");
+          if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            Name = docSnap.data().Name;
+          } else {
+            console.log("No such document!");
+          }
+        }
+        this.UserName = Name;
         var words = this.UserName.split(" ");
         this.firstLetters = words[0].charAt(0) + " " + words[1].charAt(0);
       }

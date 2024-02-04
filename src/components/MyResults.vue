@@ -247,16 +247,54 @@
     />
     <div v-if="ShowMyResult2" class="Msg">لا توجد نتائج لك</div>
     <div class="box border p-2.5" v-for="Result in Results_2" :key="Result">
-      <div>{{ Result.Type }}</div>
-      <div>{{ Result.Class }}</div>
-      <div>{{ Result.Lang }}</div>
-      <div>{{ Result.Sub }}</div>
-      <div>{{ Result.result }}/{{ Result.Allresult }}</div>
-      <div class="flex justify-between items-center">
-        <div>اختبار رقم ( {{ Result.TestNumber }})</div>
+      <div class="small_box">
         <div>
-          <div>{{ Result.percent }}%</div>
+          <div>الدراسة</div>
+          <div>{{ Result.Type }}</div>
+        </div>
+        <div>
+          <div>القسم</div>
+          <div>{{ Result.Lang }}</div>
+        </div>
+        <div>
+          <div>الفرقة</div>
+          <div>{{ Result.Class }}</div>
+        </div>
+        <div>
+          <div>المادة</div>
+          <div>{{ Result.Sub }}</div>
+        </div>
+        <div>
+          <div>إختبار رقم</div>
+          <div>{{ Result.TestNumber }}</div>
+        </div>
+        <div>
+          <div>التقدير</div>
           <div>{{ Result.appreciation }}</div>
+        </div>
+      </div>
+      <div class="small_box">
+        <div>
+          <v-progress-circular
+            :rotate="360"
+            :size="100"
+            :width="15"
+            :model-value="value_1[index]"
+            style="color: var(--main-color) !important"
+          >
+            <template v-slot:default>
+              <div
+                class="value"
+                style="
+                  font-size: 20px !important;
+                  color: var(--main-color) !important;
+                  font-weight: bold !important;
+                "
+              >
+                <span>{{ Result.percent || 0 }}</span> %
+              </div>
+            </template>
+          </v-progress-circular>
         </div>
       </div>
     </div>
@@ -471,6 +509,45 @@ export default {
   align-items: center;
   width: 100%;
 }
+
+.box {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  margin: 20px auto;
+
+  & .small_box {
+    width: 50%;
+    display: flex;
+
+    &.small_box:first-child {
+      flex-direction: column;
+      gap: 10px;
+      & > div {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        & div {
+          width: 48%;
+          padding: 10px;
+          text-align: center;
+          background: rgba(250, 250, 250, 0.5882352941);
+          border-radius: 5px;
+          box-shadow: 0 0 10px #ddd;
+          color: var(--main-color);
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    &.small_box:last-child {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
 @media (min-width: 1200px) {
 }
 
@@ -481,6 +558,13 @@ export default {
   .contain {
     flex-direction: column;
     > div {
+      width: 100%;
+    }
+  }
+  .box {
+    flex-direction: column !important;
+    gap: 30px;
+    & > .small_box {
       width: 100%;
     }
   }
