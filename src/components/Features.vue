@@ -39,40 +39,41 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", () => {
-      if (document.querySelectorAll(".feat_container .feat > div")) {
-        if (window.scrollY >= 480) {
-          document
-            .querySelectorAll(".feat_container .feat > div")
-            .forEach((e) => {
-              e.style.cssText = `top: 10px !important;transform: rotate(0deg)!important`;
-            });
-          document.querySelectorAll(
-            ".feat_container .feat > div"
-          )[0].style.background = "#fff5f5";
-          document.querySelectorAll(
-            ".feat_container .feat > div"
-          )[1].style.background = " #017296 ";
-          document.querySelectorAll(
-            ".feat_container .feat > div"
-          )[1].style.color = "  #fff ";
-          ("#fff5f5");
-          document.querySelectorAll(
-            ".feat_container .feat > div"
-          )[2].style.background = " #4a98f7 ";
-          document.querySelectorAll(
-            ".feat_container .feat > div"
-          )[2].style.color = "  #fff ";
-        } else if (window.scrollY < 480) {
-          document
-            .querySelectorAll(".feat_container .feat > div")
-            .forEach((e) => {
-              e.style.cssText = `top: -270px !important;transform: rotate(7deg)!important`;
-            });
-          if (document.querySelector(".caption_2")) {
-            document.querySelector(
-              ".caption_2"
-            ).style.cssText = `transform: rotate(-7deg)!important`;
-          }
+      if (
+        window.scrollY >= 480 &&
+        document.querySelectorAll(".feat_container .feat > div")[0]
+      ) {
+        document
+          .querySelectorAll(".feat_container .feat > div")
+          .forEach((e) => {
+            e.style.cssText = `top: 10px !important;transform: rotate(0deg)!important`;
+          });
+        document.querySelectorAll(
+          ".feat_container .feat > div"
+        )[0].style.background = "#fff5f5";
+        document.querySelectorAll(
+          ".feat_container .feat > div"
+        )[1].style.background = " #017296 ";
+        document.querySelectorAll(
+          ".feat_container .feat > div"
+        )[1].style.color = "  #fff ";
+        ("#fff5f5");
+        document.querySelectorAll(
+          ".feat_container .feat > div"
+        )[2].style.background = " #4a98f7 ";
+        document.querySelectorAll(
+          ".feat_container .feat > div"
+        )[2].style.color = "  #fff ";
+      } else if (window.scrollY < 480) {
+        document
+          .querySelectorAll(".feat_container .feat > div")
+          .forEach((e) => {
+            e.style.cssText = `top: -270px !important;transform: rotate(7deg)!important`;
+          });
+        if (document.querySelector(".caption_2")) {
+          document.querySelector(
+            ".caption_2"
+          ).style.cssText = `transform: rotate(-7deg)!important`;
         }
       }
     });

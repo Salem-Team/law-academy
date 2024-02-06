@@ -114,16 +114,18 @@
                         style="
                           background: #fff;
                           color: var(--main-color);
-                          padding: 10px;
+
                           border-radius: 5px;
                           margin-bottom: 5px;
                           border: 1px solid var(--main-color);
                           cursor: pointer;
+                          display: flex;
+                          align-items: center;
                         "
                         @click="SignOut"
                         class="hover-0"
                       >
-                        <router-link to="/">
+                        <router-link to="/" style="padding: 10px; width: 100%">
                           <v-list-item-title
                             class="flex align-center gap-1.5"
                             style="color: var(--main-color)"

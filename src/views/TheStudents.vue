@@ -142,7 +142,7 @@
           />
         </div>
         <div class="body">
-          <v-card class="mx-auto" width="100%">
+          <v-card class="mx-auto" width="100%" style="padding: 20px 10px">
             <v-card-title
               style="
                 padding: 10px;

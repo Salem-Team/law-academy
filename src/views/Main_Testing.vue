@@ -1,5 +1,6 @@
 <template>
   <div
+    id="Main_Testing"
     class="Main_Testing CC pt-2.5"
     style="margin-top: -20px; padding-bottom: 50px"
   >
@@ -165,7 +166,7 @@
             <p class="Date">{{ test.Date }}</p>
           </div>
           <div
-            class="mt-2.5 hover-0"
+            class="mt-2.5 hover-0 TestYourSelf"
             style="
               color: var(--main-color);
               font-size: 15px;
@@ -188,6 +189,28 @@
       </div>
     </div>
   </div>
+  <div>
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn color="blue" variant="text" @click="snackbar = false">
+          إغلاق
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
+  <div>
+    <v-snackbar v-model="snackbar_1" :timeout_1="timeout_1">
+      {{ text_1 }}
+
+      <template v-slot:actions>
+        <v-btn color="blue" variant="text" @click="snackbar_1 = false">
+          إغلاق
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
   <PayTest v-if="PayTest" @ColseAndOpen="ColseAndOpen" />
 </template>
 <script>
@@ -195,7 +218,6 @@ import { MDBBreadcrumb, MDBBreadcrumbItem } from "mdb-vue-ui-kit";
 import AddTest from "../components/Add_Test.vue";
 import ShowTest from "../components/ShowTest.vue";
 import PayTest from "../components/PayTest.vue";
-
 import {
   getDoc,
   getFirestore,
@@ -222,21 +244,6 @@ import "moment/locale/ar";
 export default {
   name: "Main_Testing",
   emits: ["GetData"],
-  computed: {
-    UserAdmin() {
-      return this.$store.state.UserAdmin;
-    },
-  },
-  mounted() {
-    this.CheckAboutAdminState();
-    setInterval(() => {
-      this.CheckAboutAdminState();
-    }, 1000);
-    this.getvalues();
-    setTimeout(() => {
-      this.GetData();
-    }, 1000);
-  },
   data() {
     return {
       ShowBtnToUser: null,
@@ -257,8 +264,32 @@ export default {
       PayState: true,
       PayTest: null,
       UserAdminState: null,
+      main_state: null,
+      text: "انتظر حتي يحين موعد الإختبار!",
+      text_1: "يجب عليك الإشتراك أولاً!",
+      snackbar: false,
+      snackbar_1: false,
+      timeout: 5000,
+      timeout_1: 5000,
+      // arabicTimes: ["٢:٤٤", "١٢:٠٠"],
+      // largestTimeFormatted: null,
     };
   },
+
+  mounted() {
+    setTimeout(() => {
+      location.href = `${location.href}#Main_Testing`;
+    }, 10);
+    this.CheckAboutAdminState();
+    setInterval(() => {
+      this.CheckAboutAdminState();
+    }, 1000);
+    this.getvalues();
+    setTimeout(() => {
+      this.GetData();
+    }, 1000);
+  },
+
   components: {
     MDBBreadcrumb,
     MDBBreadcrumbItem,
@@ -286,24 +317,25 @@ export default {
       }
     },
     async GetAdminState() {
-      if (this.UserAdmin === "Admin") {
-        const querySnapshot = await getDocs(collection(db, "المشرفين"));
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          if (doc.data().Id === localStorage.getItem("userid")) {
-            if (
-              doc.data().powers === "الكل" ||
-              doc.data().powers === "إضافة الإختبارات & كورسات"
-            ) {
-              this.UserAdminState = true;
-            }
-          }
-        });
-      }
+      // if (this.UserAdmin === "Admin") {
+      //   const querySnapshot = await getDocs(collection(db, "المشرفين"));
+      //   querySnapshot.forEach((doc) => {
+      //     // doc.data() is never undefined for query doc snapshots
+      //     if (doc.data().Id === localStorage.getItem("userid")) {
+      //       if (
+      //         doc.data().powers === "الكل" ||
+      //         doc.data().powers === "إضافة الإختبارات & كورسات"
+      //       ) {
+      //         this.UserAdminState = true;
+      //       }
+      //     }
+      //   });
+      // }
     },
     Time() {
       for (let i = 0; i < this.AllTest.length; i++) {
         moment(this.AllTest[i].Time, "HH:mm").locale("ar").format("h:mm A");
+        // moment(this.AllTest[i].Date).locale("en").format("DD/MM/YYYY");
         let AllTime = document.querySelectorAll(".box .Time");
         AllTime[i].innerHTML = moment(this.AllTest[i].Time, "HH:mm")
           .locale("ar")
@@ -316,32 +348,49 @@ export default {
     async CheckTimeAndData(index) {
       this.TestIndex = index;
       const currentDate = new Date();
-      const currentTime = moment(currentDate).format("HH:mm");
-      let currentYear = moment().locale("ar").format("YYYY");
-      let currentMonth = moment().locale("ar").format("MM");
-      let currentDay = moment().locale("ar").format("DD");
-      const year = moment(this.AllTest[index].Date, "DD/MM/YYYY").format(
-        "YYYY"
+      const currentTime = moment(currentDate).locale("en").format("HH:mm");
+      let currentDate_v2 = moment(currentDate)
+        .locale("ar")
+        .format("DD/MM/YYYY");
+      console.log(
+        "TimeInData",
+        moment(this.AllTest[index].Time, "HH:mm").unix()
       );
-      const Month = moment(this.AllTest[index].Date, "DD/MM/YYYY").format("MM");
-      const Day = moment(this.AllTest[index].Date, "DD/MM/YYYY").format("DD");
-      let state;
-      if (currentYear > year) {
-        state = true;
-      } else {
-        if (currentMonth > Month) {
-          state = true;
+      console.log(
+        "DateInData",
+        moment(this.AllTest[index].Date, "DD/MM/YYYY").unix()
+      );
+      console.log(
+        "currentDate_v2",
+        moment(currentDate_v2, "DD/MM/YYYY").unix()
+      );
+      if (
+        moment(currentDate_v2, "DD/MM/YYYY").unix() >
+        moment(this.AllTest[index].Date, "DD/MM/YYYY").unix()
+      ) {
+        this.main_state = true;
+      } else if (
+        moment(currentDate_v2, "DD/MM/YYYY").unix() ===
+        moment(this.AllTest[index].Date, "DD/MM/YYYY").unix()
+      ) {
+        if (
+          moment(currentTime, "HH:mm").unix() >=
+          moment(this.AllTest[index].Time, "HH:mm").unix()
+        ) {
+          this.main_state = true;
         } else {
-          if (currentDay > Day) {
-            state = true;
-          } else {
-            state = "Day";
-          }
+          this.main_state = false;
         }
+      } else {
+        this.main_state = false;
       }
-      if (state === "Day") {
-        if (currentTime >= this.AllTest[index].Time) {
-          if (this.AllTest[index].Type === "مدفوع") {
+
+      if (this.main_state) {
+        console.log("this.main_state", this.main_state);
+        if (this.AllTest[index].Type === "مدفوع") {
+          if (this.ShowBtnToUser === "Admin") {
+            this.ShowTest = true;
+          } else {
             const q = query(
               collection(db, "الطلاب"),
               where("userid", "==", localStorage.getItem("userid"))
@@ -358,44 +407,28 @@ export default {
                 ) {
                   if (user.pay[i].success === "true") {
                     this.ShowTest = true;
+                    this.snackbar_1 = false;
                   } else {
-                    this.PayTest = true;
+                    this.snackbar_1 = true;
                   }
                 }
               }
-            });
-          } else {
-            this.ShowTest = true;
-          }
-        }
-      }
-      if (state) {
-        if (this.AllTest[index].Type === "مدفوع") {
-          const q = query(
-            collection(db, "الطلاب"),
-            where("userid", "==", localStorage.getItem("userid"))
-          );
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => {
-            const user = doc.data();
-            for (let i = 0; i < user.pay.length; i++) {
-              if (
-                user.pay[i].BillName === "جميع الإختبارات" &&
-                user.pay[i].BillType === this.Type &&
-                user.pay[i].BillClass === this.Class &&
-                user.pay[i].BillLang === this.Lang
-              ) {
-                if (user.pay[i].success === "true") {
-                  this.ShowTest = true;
-                } else {
-                  this.PayTest = true;
-                }
+              if (user.pay.length === 0) {
+                this.snackbar_1 = true;
+                console.log("مدفوع");
               }
-            }
-          });
+            });
+          }
         } else {
           this.ShowTest = true;
         }
+      } else {
+        this.snackbar = true;
+      }
+      if (this.ShowBtnToUser === "Admin") {
+        this.snackbar = false;
+        this.snackbar_1 = false;
+        this.ShowTest = true;
       }
     },
     getvalues() {
@@ -530,6 +563,9 @@ nav {
 }
 
 @media (max-width: 767px) {
+  .TestYourSelf {
+    width: 100% !important;
+  }
   .data {
     flex-direction: column;
     > div {

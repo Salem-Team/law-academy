@@ -54,7 +54,7 @@
             class="w-48"
           ></v-text-field>
 
-          <v-card class="mx-auto" width="100%">
+          <v-card class="mx-auto" width="100%" style="padding: 20px 10px">
             <v-card-title
               style="padding: 10px"
               class="flex text-h6 font-weight-regular justify-space-between mb-2.5 gap-2.5"

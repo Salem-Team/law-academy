@@ -12,7 +12,7 @@
       v-for="(Subject, index) in Subjects"
       :key="Subject"
     >
-      <div class="flex justify-between">
+      <div class="flex justify-between w-100">
         <div class="flex flex-col justify-between">
           <div
             style="
@@ -42,6 +42,7 @@
     margin-top: 10px;
     width: fit-content;
     padding: 5px 11px;
+    
 }"
           >
             <font-awesome-icon :icon="['fas', 'circle-info']" />
@@ -99,7 +100,7 @@
         style="z-index: 101"
       ></div>
       <div
-        class="bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto container"
+        class="bg-white ShowAllResult fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto container"
         v-show="ShowResult"
         style="z-index: 101"
       >
@@ -465,8 +466,13 @@ export default {
       let Array = [];
       // let State;
       for (let i = 0; i < docData.resultes.length; i++) {
+        console.log(docData.Type);
+        console.log(
+          "ocData.resultes[i].Type",
+          docData.resultes[i].Type.split(" ")[0]
+        );
         if (
-          docData.resultes[i].Type === docData.TypeOfClass &&
+          docData.resultes[i].Type.split(" ")[0] === docData.Type &&
           docData.resultes[i].Class === docData.Class &&
           docData.resultes[i].Lang === docData.Lang
         ) {
@@ -514,7 +520,7 @@ export default {
   display: flex;
   align-items: center;
   border-radius: 5px;
-  margin: 20px auto;
+  margin: 20px 0;
 
   & .small_box {
     width: 50%;
@@ -547,6 +553,13 @@ export default {
       justify-content: center;
     }
   }
+}
+
+.ShowAllResult {
+  background-image: url("../assets/WhatsApp Image 2023-12-04 at 11.00.58 PM.jpeg");
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
 }
 @media (min-width: 1200px) {
 }

@@ -173,45 +173,54 @@ export default {
     },
     formatDate(date) {
       if (!date) return "";
-      return moment(date).format("DD/MM/YYYY");
+      return moment(date).locale("en").format("DD/MM/YYYY");
     },
 
     async AddData() {
-      let formattedTime = moment(this.selectedTime, "hh:mm A")
-        // .locale("ar")
-        .format("HH:mm");
+      console.log(this.selectedTime);
+      // let formattedTime = moment(this.selectedTime, "hh:mm A").format("HH:mm");
+
+      // console.log("formattedTime", formattedTime);
 
       // قم بطباعة الوقت المنسق
+      console.log("this.Time ", this.selectedTime);
+      console.log("this.selectedDate ", this.formatDate(this.selectedDate));
+      if (this.selectedTime && this.selectedDate) {
+        const newData = {
+          Time: this.selectedTime,
+          Date: this.formatDate(this.selectedDate),
+          Type: document.querySelector(".type .type.ActiveClass span")
+            .innerHTML,
+          AllQu: {},
+        };
+        let sentence = localStorage.getItem("updateType");
+        let words = sentence.split(" ");
+        let firstWord = words[0];
 
-      const newData = {
-        Time: formattedTime,
-        Date: this.formatDate(this.selectedDate),
-        Type: document.querySelector(".type .type.ActiveClass span").innerHTML,
-        AllQu: {},
-      };
-      let sentence = localStorage.getItem("updateType");
-      let words = sentence.split(" ");
-      let firstWord = words[0];
+        const collectionPath = `اختبارات - ${firstWord} - ${localStorage.getItem(
+          "updateLang"
+        )} - ${localStorage.getItem("updateClass")}`;
+        const docRef = doc(
+          db,
+          collectionPath,
+          localStorage.getItem("updateSub")
+        );
 
-      const collectionPath = `اختبارات - ${firstWord} - ${localStorage.getItem(
-        "updateLang"
-      )} - ${localStorage.getItem("updateClass")}`;
-      const docRef = doc(db, collectionPath, localStorage.getItem("updateSub"));
-
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const docData = docSnap.data();
-        if (!docData.test) {
-          docData.test = [];
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const docData = docSnap.data();
+          if (!docData.test) {
+            docData.test = [];
+          }
+          docData.test.push(newData);
+          await setDoc(docRef, docData);
+        } else {
+          await setDoc(docRef, { test: [newData] });
         }
-        docData.test.push(newData);
-        await setDoc(docRef, docData);
-      } else {
-        await setDoc(docRef, { test: [newData] });
-      }
 
-      this.CloseAddTest();
-      this.GetData();
+        this.CloseAddTest();
+        this.GetData();
+      }
     },
   },
 };

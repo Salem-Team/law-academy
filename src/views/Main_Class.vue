@@ -945,7 +945,6 @@ export default {
       setTimeout(() => {
         this.EditFunction();
         this.AddSubToStore();
-        this.CloseFunction();
         // this.Open_Test();
       }, 1000);
     },

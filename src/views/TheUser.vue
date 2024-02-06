@@ -409,11 +409,13 @@ export default {
   },
 
   mounted() {
-    this.GetData();
-    this.RankingShow = true;
-    this.State();
     setTimeout(() => {
-      this.DisplayNone();
+      this.GetData();
+      this.RankingShow = true;
+      this.State();
+      setTimeout(() => {
+        this.DisplayNone();
+      }, 10);
     }, 1);
   },
   beforeUnmount() {
