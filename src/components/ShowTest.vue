@@ -722,6 +722,7 @@ export default {
           this.result = 0;
         }
       }
+      this.AddResultInData();
     },
     ClickActive() {
       let AnswerDad = document.querySelectorAll(".Answer");

@@ -39,7 +39,12 @@
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </div>
-      <div class="main_Overlay" v-if="Add_Img" @click="Add_Img = false"></div>
+      <div
+        class="main_Overlay"
+        style="z-index: 100"
+        v-if="Add_Img"
+        @click="Add_Img = false"
+      ></div>
       <div
         v-if="Add_Img"
         class="Add_Img bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
@@ -109,9 +114,29 @@
               padding: 5px 15px;
             "
           >
-            في الأكاديمية
+            الأكاديمية
           </div>
         </div>
+      </div>
+      <div
+        v-if="img.length === 0"
+        style="
+          text-align: center;
+          background: #fff;
+          padding: 10px;
+          border-radius: 5px;
+          font-weight: bold;
+          color: var(--main-color);
+        "
+      >
+        لا يوجد صور لعرضها
+      </div>
+      <div v-if="loading">
+        <img
+          src="../assets/animation_lolk2w1w_small.gif"
+          alt=""
+          style="margin: 10px auto"
+        />
       </div>
       <div class="box flex justify-start gap-2.5 flex-wrap">
         <div
@@ -280,6 +305,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       ShowBtnToUser: null,
       imges: 4,
       Add_Img: null,
@@ -298,16 +324,9 @@ export default {
         },
       ],
 
-      items: ["تكريم", "في الأكاديمية"],
+      items: ["تكريم", "الأكاديمية"],
       Admin_Gallery: null,
     };
-  },
-  watch: {
-    userid(newValue) {
-      if (newValue === "yTwIh2jjbpHJUpm91z7Y") {
-        console.log("Test Watch");
-      }
-    },
   },
 
   methods: {
@@ -348,20 +367,24 @@ export default {
     ShowBtnMore() {
       let DivNotHidden = document.querySelectorAll(".box > div:not(.hidden)");
       if (DivNotHidden.length > 6) {
-        DivNotHidden.forEach((e, index) => {
-          if (index >= 6) {
-            e.classList.add("hidden");
-          }
-        });
         this.More = true;
         setTimeout(() => {
-          document.querySelector(".More").onclick = () => {
-            this.More = false;
-            DivNotHidden.forEach((e) => {
-              e.classList.remove("hidden");
-            });
-          };
+          DivNotHidden.forEach((e, index) => {
+            if (index >= 6) {
+              e.classList.add("hidden");
+            }
+          });
+          if (document.querySelector(".More")) {
+            document.querySelector(".More").onclick = () => {
+              this.More = false;
+              DivNotHidden.forEach((e) => {
+                e.classList.remove("hidden");
+              });
+            };
+          }
         }, 10);
+      } else {
+        this.More = false;
       }
     },
     Select() {
@@ -374,11 +397,10 @@ export default {
           });
           btn[i].classList.add("active");
 
-          // setInterval(() => {
           document.querySelectorAll(".box > div").forEach((e) => {
             if (
-              e.classList[4] + " " + e.classList[5] === "في الأكاديمية" &&
-              btn[i].innerHTML === " في الأكاديمية "
+              e.classList[4] === "الأكاديمية" &&
+              btn[i].innerHTML === " الأكاديمية "
             ) {
               document.querySelectorAll(".box > div").forEach((ele) => {
                 ele.classList.add("hidden");
@@ -405,12 +427,8 @@ export default {
             }
             setTimeout(() => {
               this.ShowBtnMore();
-            }, 50);
-            // else {
-            //   console.log("wronge");
-            // }
+            }, 100);
           });
-          // }, 100);
         };
       }
     },
@@ -426,10 +444,10 @@ export default {
       setTimeout(() => {
         this.Select();
       }, 100);
-      console.log(this.img.length);
       setTimeout(() => {
         this.ShowBtnMore();
       }, 50);
+      this.loading = false;
     },
     async AddImg() {
       if (this.Link.length > 10) {
@@ -438,6 +456,7 @@ export default {
           Category:
             document.querySelector(".v-select .v-select__selection-text")
               .innerText || "تكريم",
+          Time: new Date(),
         });
         this.Link = "";
         this.Add_Img = false;

@@ -237,10 +237,10 @@
       </div>
       <nav class="mb-2.5" aria-label="breadcrumb">
         <MDBBreadcrumb>
-          <MDBBreadcrumbItem>{{ Type }} / </MDBBreadcrumbItem>
-          <MDBBreadcrumbItem>{{ Lang }} / </MDBBreadcrumbItem>
+          <MDBBreadcrumbItem>{{ Type }} </MDBBreadcrumbItem>
+          <MDBBreadcrumbItem>{{ Lang }} </MDBBreadcrumbItem>
 
-          <MDBBreadcrumbItem active> {{ Class }}</MDBBreadcrumbItem>
+          <MDBBreadcrumbItem> {{ Class }}</MDBBreadcrumbItem>
         </MDBBreadcrumb>
         <div style="display: flex; align-items: center; gap: 10px">
           <font-awesome-icon
@@ -251,7 +251,7 @@
           <font-awesome-icon
             :icon="['fas', 'magnifying-glass']"
             style="background: #fafafa; padding: 10px; border-radius: 5px"
-            @click="Search = !Search"
+            @click="SearchFunction"
           />
           <font-awesome-icon
             :icon="['fas', 'circle-info']"
@@ -266,7 +266,7 @@
 
       <v-text-field
         label="ابحث في الأسماء"
-        :rules="passRules"
+        :rules="searchInput"
         class="border p-2.5 bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
         type="text"
         v-if="Search"
@@ -285,7 +285,7 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 20px;
+          margin: 20px auto;
         "
       >
         <div
@@ -312,7 +312,7 @@
                   font-weight: bold !important;
                 "
               >
-                {{ AllStudent || 0 }} %
+                {{ AllStudent || 0 }}
               </div>
             </template>
           </v-progress-circular>
@@ -333,7 +333,7 @@
             :rotate="360"
             :size="100"
             :width="15"
-            :model-value="AllBoy"
+            :model-value="(AllBoy / AllStudent) * 100 || 0"
             style="color: var(--main-color) !important"
           >
             <template v-slot:default>
@@ -344,7 +344,7 @@
                   font-weight: bold !important;
                 "
               >
-                {{ AllBoy || 0 }} %
+                {{ Math.floor((AllBoy / AllStudent) * 100) || 0 }} %
               </div>
             </template>
           </v-progress-circular>
@@ -365,7 +365,7 @@
             :rotate="360"
             :size="100"
             :width="15"
-            :model-value="AllGirl"
+            :model-value="(AllGirl / AllStudent) * 100 || 0"
             style="color: var(--main-color) !important"
           >
             <template v-slot:default>
@@ -376,10 +376,11 @@
                   font-weight: bold !important;
                 "
               >
-                {{ AllGirl || 0 }} %
+                {{ Math.floor((AllGirl / AllStudent) * 100) || 0 }} %
               </div>
             </template>
           </v-progress-circular>
+
           <div style="color: var(--main-color); font-weight: bold">
             عدد البنات
           </div>
@@ -475,34 +476,40 @@
               border-radius: 5px;
             "
           >
-            <div style="display: flex; align-items: center; gap: 10px">
+            <div
+              class="Icons"
+              style="display: flex; align-items: center; gap: 10px"
+            >
               <font-awesome-icon
                 :icon="['fas', 'trophy']"
                 color="gold"
-                v-if="index + 1 === 1"
+                class="gold hidden"
               />
               <font-awesome-icon
                 :icon="['fas', 'trophy']"
                 color="silver"
-                v-if="index + 1 <= 2"
+                class="silver hidden"
               />
               <font-awesome-icon
                 :icon="['fas', 'trophy']"
                 color="#c77b30"
-                v-if="index + 1 <= 3"
+                class="c77b30 hidden"
               />
+              <!-- v-if="index + 1" -->
               <font-awesome-icon
-                v-if="index + 1 <= 11"
+                class="madel_gold hidden"
                 :icon="['fas', 'medal']"
                 color="gold"
               />
+              <!-- v-if="index + 1 <= 51" -->
               <font-awesome-icon
-                v-if="index + 1 <= 51"
+                class="certificate_gold hidden"
                 :icon="['fas', 'certificate']"
                 color="gold"
               />
+              <!-- v-if="index + 1 <= 101" -->
               <font-awesome-icon
-                v-if="index + 1 <= 101"
+                class="certificate_silver hidden"
                 :icon="['fas', 'certificate']"
                 color="silver"
               />
@@ -543,77 +550,185 @@
     <div class="main_Overlay" v-if="BIllShow" style="z-index: 101"></div>
     <div class="main_Overlay" v-if="ResultShow" style="z-index: 101"></div>
     <div
-      class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
-      style="z-index: 101"
+      class="Main_Box BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+      style="z-index: 101; width: 90%"
       v-if="BIllShow"
     >
-      <div>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #fafafa;
+          padding: 10px;
+          border-radius: 5px;
+          color: var(--main-color);
+          font-weight: bold;
+          font-size: 20px;
+        "
+      >
+        <div>الفواتير</div>
         <font-awesome-icon :icon="['fas', 'xmark']" @click="BIllShowFunction" />
       </div>
-      <div class="BIll border p-2.5" v-for="bill in BIll" :key="bill">
-        <div>الدراسة : {{ bill.BillType }}</div>
-        <div>القسم : {{ bill.BillLang }}</div>
-        <div>الفرقة : {{ bill.BillClass }}</div>
-        <div>الصنف : {{ bill.BillItem }}</div>
-        <div>السعر : {{ +bill.BillPrice / 100 }}</div>
-        <div>المادة : {{ bill.BillName }}</div>
-        <div>كود الإستلام : {{ bill.order_id }}</div>
-        <div>
-          تاريخ الدفع :
-          {{
-            new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          }}
+
+      <div class="box_1_1 border p-2.5" v-for="bill in BIll" :key="bill">
+        <div class="small_box">
+          <div>
+            <div>الدراسة</div>
+            <div>{{ bill.BillType }}</div>
+          </div>
+          <div>
+            <div>القسم</div>
+            <div>{{ bill.BillLang }}</div>
+          </div>
+          <div>
+            <div>الفرقة</div>
+            <div>{{ bill.BillClass }}</div>
+          </div>
+          <div>
+            <div>المادة</div>
+            <div>{{ bill.BillName }}</div>
+          </div>
+          <div>
+            <div>الصنف</div>
+            <div>{{ bill.BillItem }}</div>
+          </div>
+          <div>
+            <div>السعر</div>
+            <div>{{ +bill.BillPrice / 100 }} جنية مصري</div>
+          </div>
+
+          <div>
+            <div>كود الإستلام</div>
+            <div>{{ bill.order_id }}</div>
+          </div>
+          <div>
+            <div>تاريخ الدفع</div>
+            <div>
+              {{
+                new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                  weekday: "short",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              }}
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div
+        v-if="BIll.length === 0"
+        style="
+          text-align: center;
+          margin-top: 10px;
+          color: var(--main-color);
+          font-weight: bold;
+          padding: 10px;
+        "
+      >
+        لا توجد فواتير متاحة.
       </div>
     </div>
     <div
-      class="BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
+      class="Main_Box BILL bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
       v-if="ResultShow"
-      style="z-index: 101"
+      style="z-index: 101; width: 90%"
     >
-      <div>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: #fafafa;
+          padding: 10px;
+          border-radius: 5px;
+          color: var(--main-color);
+          font-weight: bold;
+          font-size: 20px;
+          margin-bottom: 10px;
+        "
+      >
+        <div>النتائج</div>
         <font-awesome-icon
           :icon="['fas', 'xmark']"
           @click="ResultShowFunction"
         />
       </div>
-      <div class="BIll border p-2.5" v-for="bill in Result" :key="bill">
-        <div>الدراسة : {{ bill.Type }}</div>
-        <div>القسم : {{ bill.Lang }}</div>
-        <div>الفرقة : {{ bill.Class }}</div>
-        <div>المادة : {{ bill.Sub }}</div>
 
-        <div>اختبار رقم ({{ bill.TestNumber }})</div>
-        <div>التقدير : {{ bill.appreciation }}</div>
-        <div>النسبة المؤية : {{ bill.percent }}%</div>
-        <div>المجموع : {{ bill.result }} / {{ bill.Allresult }}</div>
-        <div>
-          تاريخ اختبار الطالب :
-          {{
-            new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          }}
+      <div
+        v-if="Result.length === 0"
+        style="
+          text-align: center;
+          margin-top: 10px;
+          color: var(--main-color);
+          font-weight: bold;
+          padding: 10px;
+        "
+      >
+        لا توجد نتائج متاحة.
+      </div>
+      <div class="box_1 border p-2.5" v-for="bill in Result" :key="bill">
+        <div class="small_box">
+          <div>
+            <div>الدراسة</div>
+            <div>{{ bill.Type }}</div>
+          </div>
+          <div>
+            <div>القسم</div>
+            <div>{{ bill.Lang }}</div>
+          </div>
+          <div>
+            <div>الفرقة</div>
+            <div>{{ bill.Class }}</div>
+          </div>
+          <div>
+            <div>المادة</div>
+            <div>{{ bill.Sub }}</div>
+          </div>
+          <div>
+            <div>إختبار رقم</div>
+            <div>{{ bill.TestNumber }}</div>
+          </div>
+          <div>
+            <div>التقدير</div>
+            <div>{{ bill.appreciation }}</div>
+          </div>
+        </div>
+        <div class="small_box">
+          <div>
+            <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :model-value="bill.percent || 0"
+              style="color: var(--main-color) !important"
+            >
+              <template v-slot:default>
+                <div
+                  class="value"
+                  style="
+                    font-size: 20px !important;
+                    color: var(--main-color) !important;
+                    font-weight: bold !important;
+                  "
+                >
+                  <span>{{ bill.percent || 0 }}</span> %
+                </div>
+              </template>
+            </v-progress-circular>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { MDBBreadcrumb, MDBBreadcrumbItem } from "mdb-vue-ui-kit";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
-
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyBOlDn6NmPGHHfdY-gYHvnA6MoM-y0Xbmo",
@@ -634,6 +749,10 @@ export default {
     setTimeout(() => {
       this.select();
     }, 10);
+  },
+  components: {
+    MDBBreadcrumb,
+    MDBBreadcrumbItem,
   },
   computed: {
     currentTitle() {
@@ -676,12 +795,64 @@ export default {
     AllBoy: 0,
   }),
   methods: {
+    SearchFunction() {
+      this.searchNames();
+      this.Search = !this.Search;
+    },
     Progress() {
       this.AllStudent = this.Students.length;
       this.AllBoy = this.Male.length;
       this.AllGirl = this.Female.length;
+      let Arr = [];
+      let uniqueNumbers = [];
+      setTimeout(() => {
+        let num = document.querySelectorAll(".num");
+        // let Icons = document.querySelectorAll(".Icons > svg");
+        for (let i = 0; i < this.Students.length; i++) {
+          Arr.push(this.Students[i].AllResults);
+        }
+        // حلقة لفحص كل عنصر في القائمة الأصلية
+        console.log("Arr", Arr);
+        Arr.forEach((number) => {
+          if (!uniqueNumbers.includes(number)) {
+            uniqueNumbers.push(number);
+          }
+        });
 
-      console.log(this.AllBoy);
+        console.log("uniqueNumbers", uniqueNumbers);
+        Arr.forEach((e_1, index_1) => {
+          uniqueNumbers.forEach((e_2, index_2) => {
+            if (e_2 === e_1) {
+              num[index_1].innerHTML = index_2 + 1;
+
+              console.log(e_1, index_2);
+            }
+          });
+        });
+        let box = document.querySelectorAll(".box");
+        console.log(" box.length", box.length);
+        for (let i = 0; i < box.length; i++) {
+          // console.log("(num[i].innerHTML", +num[i].innerHTML);
+          if (+num[i].innerHTML === 1) {
+            box[i].querySelectorAll(".Icons svg")[0].style.display = "block";
+          }
+          if (+num[i].innerHTML <= 2) {
+            box[i].querySelectorAll(".Icons svg")[1].style.display = "block";
+          }
+          if (+num[i].innerHTML <= 3) {
+            box[i].querySelectorAll(".Icons svg")[2].style.display = "block";
+          }
+          if (+num[i].innerHTML < 11) {
+            box[i].querySelectorAll(".Icons svg")[3].style.display = "block";
+          }
+          if (+num[i].innerHTML < 51) {
+            box[i].querySelectorAll(".Icons svg")[4].style.display = "block";
+          }
+          if (+num[i].innerHTML < 101) {
+            box[i].querySelectorAll(".Icons svg")[5].style.display = "block";
+          }
+        }
+      }, 100);
     },
     select_1() {
       this.step++;
@@ -769,12 +940,12 @@ export default {
       let theResult;
       const querySnapshot = await getDocs(collection(db, "الطلاب"));
       querySnapshot.forEach((doc) => {
-        let sentence = doc.data().Class;
-        let words = sentence.split(" ");
-        let firstWord = words[0];
+        // let sentence = doc.data().Class;
+        // let words = sentence.split(" ");
+        // let firstWord = words[0];
 
         if (
-          firstWord === this.Type &&
+          doc.data().Type === this.Type.split(" ")[0] &&
           doc.data().Lang === this.Lang &&
           doc.data().Class === this.Class
         ) {
@@ -793,11 +964,8 @@ export default {
       let thebill;
       const querySnapshot = await getDocs(collection(db, "الطلاب"));
       querySnapshot.forEach((doc) => {
-        // let sentence = doc.data().Class;
-        // let words = sentence.split(" ");
-        // let firstWord = words[0];
         if (
-          doc.data().Type === this.Type &&
+          doc.data().Type === this.Type.split(" ")[0] &&
           doc.data().Lang === this.Lang &&
           doc.data().Class === this.Class
         ) {
@@ -806,7 +974,8 @@ export default {
         }
       });
       this.BIll = thebill;
-      this.BIll.sort((a, b) => b.Time.toMillis() - a.Time.toMillis());
+      console.log(this.BIll);
+      // this.BIll.sort((a, b) => b.Time.toMillis() - a.Time.toMillis());
     },
     async GetData() {
       this.showDownloadIcon = false;
@@ -831,7 +1000,8 @@ export default {
           this.Students.push(data);
           this.names.push(data.Name);
           this.Students.sort((a, b) => b.AllResults - a.AllResults);
-          if (data.type === "بنين") {
+          console.log(doc.data().Gender);
+          if (doc.data().Gender === "بنين") {
             this.Male.push(data.type);
           } else {
             this.Female.push(data.type);
@@ -839,6 +1009,7 @@ export default {
         }
       });
       this.Progress();
+      this.searchNames();
     },
   },
 };
@@ -850,6 +1021,14 @@ export default {
   background-position: center top;
   background-attachment: fixed;
 }
+.Main_Box,
+.Info {
+  background-image: url("../assets/WhatsApp Image 2023-12-04 at 11.00.58 PM.jpeg");
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
 .v-window-item span,
 .v-window-item a {
   width: 90%;
@@ -889,6 +1068,84 @@ nav {
   color: #fff;
 }
 
+.box_1_1 {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  margin: 20px 0;
+
+  & .small_box {
+    width: 100%;
+    display: flex;
+
+    &.small_box:first-child {
+      flex-direction: column;
+      gap: 10px;
+      & > div {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        width: 100%;
+        & div {
+          width: 48%;
+          padding: 10px;
+          text-align: center;
+          background: rgba(250, 250, 250, 0.5882352941);
+          border-radius: 5px;
+          box-shadow: 0 0 10px #ddd;
+          color: var(--main-color);
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    &.small_box:last-child {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+.box_1 {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  margin: 20px 0;
+
+  & .small_box {
+    width: 50%;
+    display: flex;
+
+    &.small_box:first-child {
+      flex-direction: column;
+      gap: 10px;
+      & > div {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        & div {
+          width: 48%;
+          padding: 10px;
+          text-align: center;
+          background: rgba(250, 250, 250, 0.5882352941);
+          border-radius: 5px;
+          box-shadow: 0 0 10px #ddd;
+          color: var(--main-color);
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    &.small_box:last-child {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
 @media (min-width: 1200px) {
 }
 
@@ -911,6 +1168,16 @@ nav {
     justify-content: center;
     & > div {
       width: 100% !important;
+    }
+  }
+  .breadcrumb {
+    font-size: 12px !important;
+  }
+  .box_1 {
+    flex-direction: column !important;
+    gap: 30px;
+    & > .small_box {
+      width: 100%;
     }
   }
 }

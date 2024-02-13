@@ -645,11 +645,10 @@ export default {
         this.TypeOfClass = user.TypeOfClass;
         this.User = user;
       });
-      // setTimeout(() => {
-      this.handleTotalResult();
-      this.All_Btn();
-
-      // }, 1000);
+      setTimeout(() => {
+        this.handleTotalResult();
+        this.All_Btn();
+      }, 100);
     },
   },
 };

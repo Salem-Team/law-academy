@@ -1,5 +1,7 @@
 <template>
   <div class="Header">
+    <p class="element" hidden>Welcome To The New World</p>
+    <p class="element" hidden>Welcome To The New World</p>
     <div class="container flex justify-between items-center gap-2.5">
       <div class="logo">
         <router-link to="/" class="flex items-center gap-2.5">
@@ -68,16 +70,20 @@
                         style="
                           background: #fff;
                           color: var(--main-color);
-                          padding: 10px;
                           border-radius: 5px;
                           margin-bottom: 5px;
                           border: 1px solid var(--main-color);
                           cursor: pointer;
+                          display: flex;
+                          align-items: center;
                         "
                         class="hover-0"
                         v-if="ShowBtnToUser === 'Student'"
                       >
-                        <router-link to="/TheUser">
+                        <router-link
+                          to="/TheUser"
+                          style="padding: 10px; width: 100%"
+                        >
                           <v-list-item-title
                             class="flex align-center gap-1.5"
                             style="color: var(--main-color)"
@@ -91,16 +97,19 @@
                         style="
                           background: #fff;
                           color: var(--main-color);
-                          padding: 10px;
                           border-radius: 5px;
                           margin-bottom: 5px;
                           border: 1px solid var(--main-color);
                           cursor: pointer;
+                          display: flex;
+                          align-items: center;
                         "
                         class="hover-0"
                         v-if="ShowBtnToUser === 'Admin'"
                       >
-                        <router-link to="/AdminPage"
+                        <router-link
+                          to="/AdminPage"
+                          style="padding: 10px; width: 100%"
                           ><v-list-item-title
                             class="flex align-center gap-1.5"
                             style="color: var(--main-color)"
@@ -114,7 +123,6 @@
                         style="
                           background: #fff;
                           color: var(--main-color);
-
                           border-radius: 5px;
                           margin-bottom: 5px;
                           border: 1px solid var(--main-color);
@@ -387,7 +395,9 @@ export default {
     },
     close_1() {
       this.close_1_State = !this.close_1_State;
-      this.UserStateFunction();
+      setTimeout(() => {
+        this.UserStateFunction();
+      }, 100);
     },
     close_2() {
       this.close_2_State = !this.close_2_State;

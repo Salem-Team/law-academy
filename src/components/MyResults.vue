@@ -280,7 +280,7 @@
             :rotate="360"
             :size="100"
             :width="15"
-            :model-value="value_1[index]"
+            :model-value="Result.percent"
             style="color: var(--main-color) !important"
           >
             <template v-slot:default>

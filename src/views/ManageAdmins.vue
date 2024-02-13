@@ -1,5 +1,9 @@
 <template>
-  <div class="ManageAdmins" style="margin-top: -20px; padding-bottom: 50px">
+  <div
+    class="ManageAdmins"
+    id="ManageAdmins"
+    style="margin-top: -20px; padding-bottom: 50px"
+  >
     <div class="container relative" style="padding-top: 160px">
       <div
         style="
@@ -36,8 +40,20 @@
       <div
         class="AddAdmin bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 max-h-90 overflow-auto"
         v-if="ShowAddAdmin"
+        style="z-index: 1001"
       >
-        <div class="flex items-center justify-between">
+        <div
+          class="flex items-center justify-between"
+          style="
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 5px;
+            color: var(--main-color);
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+          "
+        >
           <div>إضافة مشرف</div>
           <font-awesome-icon
             :icon="['fas', 'xmark']"
@@ -185,7 +201,9 @@ const db = getFirestore(app);
 import bcrypt from "bcryptjs";
 export default {
   mounted() {
-    // this.generateRandomString(7);
+    setTimeout(() => {
+      location.href = `/ManageAdmins#ManageAdmins`;
+    }, 10);
     this.GetData();
   },
   data: () => ({

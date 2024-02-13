@@ -1,5 +1,9 @@
 <template>
-  <div class="AdminPage" style="margin-top: -20px; padding-bottom: 50px">
+  <div
+    class="AdminPage"
+    id="AdminPage"
+    style="margin-top: -20px; padding-bottom: 50px"
+  >
     <div class="container relative" style="padding-top: 160px">
       <div
         style="
@@ -14,11 +18,19 @@
         الإشراف
       </div>
       <div class="contain flex gap-2.5 w-100 justify-center flex-wrap">
-        <router-link to="/ManageAdmins" class="box border p-2.5 hover-0">
-          إدارة المشرفين
+        <router-link
+          to="/ManageAdmins"
+          class="box border p-2.5 hover-0 flex align-center gap-2.5"
+        >
+          <font-awesome-icon :icon="['fas', 'gears']" />
+          <div>إدارة المشرفين</div>
         </router-link>
-        <router-link to="/TheStudents" class="box border p-2.5 hover-0">
-          الطلاب
+        <router-link
+          to="/TheStudents"
+          class="box border p-2.5 hover-0 flex align-center gap-2.5"
+        >
+          <font-awesome-icon :icon="['fas', 'graduation-cap']" />
+          <div>الطلاب</div>
         </router-link>
       </div>
     </div>
@@ -27,6 +39,11 @@
 <script>
 export default {
   name: "AdminPage",
+  mounted() {
+    setTimeout(() => {
+      location.href = `/AdminPage#AdminPage`;
+    }, 10);
+  },
 };
 </script>
 <style lang="scss">

@@ -1,30 +1,9 @@
 <template>
-  <div
-    class="TheLanding p-2.5"
-    style="margin: 0; min-height: 110vh; padding-bottom: 50px"
-  >
+  <div class="TheLanding p-2.5" style="margin: 0; padding-bottom: 50px">
     <div class="container relative" style="margin-top: 140px">
-      <!-- <div class="flex justify-end w-100 absolute bottom-14 left-0">
-        <img
-          src="../assets/Animation - 1701644199286.gif"
-          alt=""
-          width="50px"
-          class="law"
-          style="z-index: 0"
-        />
-      </div> -->
       <div class="flex justify-center items-center h-80 contain">
         <div class="right w-1/2 relative">
           <img src="../assets/الإمام-بدون-خلفية2.webp" alt="" class="m-auto" />
-          <!-- <div class="flex justify-end w-100 absolute bottom-14 left-0">
-            <img
-              src="../assets/Animation - 1701644199286.gif"
-              alt=""
-              width="50px"
-              class="law"
-              style="z-index: 0"
-            />
-          </div> -->
         </div>
         <div class="left w-1/2 flex flex-col justify-center gap-2.5">
           <h2 class="title" style="font-size: 35px">د /</h2>
@@ -164,99 +143,6 @@
               </div>
             </div>
           </div>
-          <!-- <div style="z-index: 1; width: fit-content">
-            <v-dialog v-model="dialog">
-              <template v-slot:activator="{ props }">
-                <div v-bind="props" class="button_2 p-0"></div>
-              </template>
-              <v-card>
-                <div
-                  class="flex justify-between items-center p-2.5"
-                  style="
-                    display: flex;
-                    align-items: center;
-                    padding: 18px 24px;
-                    gap: 10px;
-                  "
-                >
-                  <v-card-title>
-                    <div class="title_1_1 flex items-center gap-2.5">
-                      <font-awesome-icon :icon="['fas', 'scale-balanced']" />
-                      <span>مجالات العمل بعد التخرج </span>
-                    </div>
-                  </v-card-title>
-
-                  <font-awesome-icon
-                    @click="dialog = false"
-                    class="text-2xl text-[--main-color]"
-                    :icon="['fas', 'xmark']"
-                  />
-                </div>
-                <v-card-text>
-                  <div class="text-ringth text-[--main-color] mb-2.5 font-bold">
-                    ({{ data_1.length }}) مجال
-                  </div>
-                  <div v-for="(data, index) in data_1" :key="data" class="feat">
-                    <span>{{ index + 1 }}</span>
-                    <div>{{ data }}</div>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
-          </div> -->
-
-          <!-- <div style="z-index: 1; width: fit-content">
-            <v-dialog v-model="dialog2">
-              <template v-slot:activator="{ props }">
-                <div v-bind="props" class="button_2 p-0">
-                  <font-awesome-icon :icon="['fas', 'circle-question']" />
-                  <span></span>
-                </div>
-              </template>
-              <v-card>
-                <div
-                  class="flex justify-between items-center p-2.5"
-                  style="
-                    display: flex;
-                    align-items: center;
-                    padding: 18px 24px;
-                    gap: 10px;
-                  "
-                >
-                  <v-card-title>
-                    <div class="title_1_1 flex items-center gap-2.5"></div>
-                  </v-card-title>
-
-                  <font-awesome-icon
-                    @click="dialog2 = false"
-                    class="text-2xl text-[--main-color]"
-                    :icon="['fas', 'xmark']"
-                  />
-                </div>
-                <v-card-text style="padding: 0">
-                  <div
-                    style="
-                      font-family: system-ui;
-                      line-height: 2;
-                      background: #fafafa;
-                      text-align: center;
-                      border-radius: 5px;
-                      padding: 10px;
-                    "
-                  >
-                    كلية الشريعة والقانون هي من الكليات ذات الشأن العالى والرفعة
-                    في مصر، وهي إحدى أقدم وأعرق كليات جامعة الأزةر وهي كلية خاصة
-                    بدراسة العلوم الشرعية (الفقه والفقه المقارن وأصول الفقه)
-                    إضافة إلى مواد العلوم القانونية (القانون الجنائي والقانون
-                    الدستوري والقانون المدني والقانون الدولي... إلخ)والتي تماثل
-                    تلك المواد التي يتم تدريسها في كليات الحقوق مما أكسب هذه
-                    الكلية ميزةَ الجمع بين العلوم الدينية " المتمثلة في المواد
-                    الشرعية. والعلوم الدنيوية " المتمثلة في المواد القانونية.
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
-          </div> -->
         </div>
       </div>
     </div>
@@ -400,6 +286,9 @@ img {
 }
 
 @media (max-width: 767px) {
+  .TheLanding {
+    min-height: 150vh;
+  }
   .contain {
     flex-direction: column;
     gap: 10px;
