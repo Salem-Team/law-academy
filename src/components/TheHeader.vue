@@ -332,7 +332,6 @@ export default {
           // doc.data() is never undefined for query doc snapshots
           if (doc.data().Id === localStorage.getItem("userid")) {
             if (doc.data().powers === "الكل") {
-              console.log("Admin");
               this.UserAdminState = true;
             }
           }
@@ -420,7 +419,6 @@ export default {
         const docSnap = await getDoc(docRef);
         let Name;
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
           Name = `${docSnap.data().name_1} ${docSnap.data().name_2} ${
             docSnap.data().name_3
           }`;
