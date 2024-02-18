@@ -3,13 +3,17 @@
     <div class="container relative" style="margin-top: 140px">
       <div class="flex justify-center items-center h-80 contain">
         <div class="right w-1/2 relative">
-          <img src="../assets/الإمام-بدون-خلفية2.webp" alt="" class="m-auto" />
+          <img
+            src="../assets/_22be6f76-548b-4f93-9b52-9ec87db85313.jpg"
+            alt=""
+            class="m-auto"
+          />
         </div>
         <div class="left w-1/2 flex flex-col justify-center gap-2.5">
-          <h2 class="title" style="font-size: 35px">د /</h2>
-          <h1 class="title_2" style="font-size: 46px">محمد الإمام</h1>
+          <!-- <h2 class="title" style="font-size: 35px"></h2> -->
+          <h1 class="title_2" style="font-size: 46px">أكاديمية القانون</h1>
           <div class="title_3">
-            منصة الإمام منصة متخصصة في تدريس المواد القانونية
+            منصة القانون منصة متخصصة في تدريس المواد القانونية
           </div>
           <div
             class="All_btn"

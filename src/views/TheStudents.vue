@@ -248,11 +248,11 @@
             style="background: #fafafa; padding: 10px; border-radius: 5px"
             @click="Sliders = !Sliders"
           />
-          <font-awesome-icon
+          <!-- <font-awesome-icon
             :icon="['fas', 'magnifying-glass']"
             style="background: #fafafa; padding: 10px; border-radius: 5px"
             @click="SearchFunction"
-          />
+          /> -->
           <font-awesome-icon
             :icon="['fas', 'circle-info']"
             color="info
@@ -262,9 +262,9 @@
           />
         </div>
       </nav>
-      <div class="main_Overlay" v-if="Search" @click="Search = !Search"></div>
+      <!-- <div class="main_Overlay" v-if="Search" @click="Search = !Search"></div> -->
 
-      <v-text-field
+      <!-- <v-text-field
         label="ابحث في الأسماء"
         :rules="searchInput"
         class="border p-2.5 bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
@@ -279,7 +279,7 @@
         >
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </div>
-      </v-text-field>
+      </v-text-field> -->
       <div
         style="
           display: flex;
@@ -696,6 +696,21 @@
           <div>
             <div>التقدير</div>
             <div>{{ bill.appreciation }}</div>
+          </div>
+          <div>
+            <div>الوقت</div>
+            <div>
+              {{
+                new Date(bill.Time.toMillis()).toLocaleString(["ar"], {
+                  weekday: "short",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              }}
+            </div>
           </div>
         </div>
         <div class="small_box">
@@ -1145,7 +1160,13 @@ nav {
     }
   }
 }
-
+table th,
+td {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 10px;
+  color: var(--main-color);
+}
 @media (min-width: 1200px) {
 }
 

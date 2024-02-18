@@ -1,25 +1,54 @@
 <template>
-  <div
-    class="section"
-    style="
-      margin-top: 125px;
-      margin-top: 125px;
-      background: #fafafa;
-      padding: 30px 10px;
-    "
-  >
-    <div class="container flex align-center justify-center feat_container">
-      <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
-        <img src="../assets/exam.png" alt="exam" />
-        <div class="caption_1">امتحانات رقمية بنظام MCQ</div>
-      </div>
-      <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
-        <img src="../assets/test.png" alt="test" />
-        <div class="caption_2">اكثر من الف سؤال لكل ماده</div>
-      </div>
-      <div class="feat flex align-center justify-center flex-col w-32 gap-2.5">
-        <img src="../assets/clock.png" alt="clock" />
-        <div class="caption_3">امتحانات بمؤقت ونتائج فوريه</div>
+  <div>
+    <div
+      class="animation container"
+      style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+        width: 90%;
+        margin: 45px auto 0;
+      "
+    >
+      <img src="../assets/Animation - 1708119404366.gif" alt="" />
+      <img src="../assets/Animation - 1708119428528.gif" alt="" />
+      <img src="../assets/Animation - 1708130997569.gif" alt="" />
+    </div>
+    <div
+      class="section"
+      style="
+        margin-top: 45px;
+        background: var(--main-color);
+        padding: 30px 10px;
+      "
+    >
+      <!-- 
+    height: 200px;
+    position: absolute;
+    width: 200px;
+    top: -146px;
+   -->
+
+      <div class="container flex align-center justify-center feat_container">
+        <div
+          class="feat flex align-center justify-center flex-col w-32 gap-2.5"
+        >
+          <img src="../assets/exam.png" alt="exam" class="img" />
+          <div class="caption_1">امتحانات رقمية بنظام MCQ</div>
+        </div>
+        <div
+          class="feat flex align-center justify-center flex-col w-32 gap-2.5"
+        >
+          <img src="../assets/test.png" alt="test" class="img" />
+          <div class="caption_2">اكثر من الف سؤال لكل ماده</div>
+        </div>
+        <div
+          class="feat flex align-center justify-center flex-col w-32 gap-2.5"
+        >
+          <img src="../assets/clock.png" alt="clock" class="img" />
+          <div class="caption_3">امتحانات بمؤقت ونتائج فوريه</div>
+        </div>
       </div>
     </div>
   </div>
@@ -39,8 +68,9 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", () => {
+      console.log(window.scrollY);
       if (
-        window.scrollY >= 480 &&
+        window.scrollY >= 590 &&
         document.querySelectorAll(".feat_container .feat > div")[0]
       ) {
         document
@@ -64,7 +94,7 @@ export default {
         document.querySelectorAll(
           ".feat_container .feat > div"
         )[2].style.color = "  #fff ";
-      } else if (window.scrollY < 480) {
+      } else if (window.scrollY < 590) {
         document
           .querySelectorAll(".feat_container .feat > div")
           .forEach((e) => {
@@ -81,11 +111,15 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-img {
+.img {
   height: 200px;
 }
+
 .container {
   gap: 20px;
+}
+.animation > img {
+  width: 100px;
 }
 .feat {
   > div {
@@ -102,15 +136,11 @@ img {
     transition: 1.3s;
     transform: rotate(7deg);
     box-shadow: 0 0 1px var(--main-color);
+
     &.caption_2 {
       transform: rotate(-7deg);
     }
   }
-}
-@media (min-width: 1200px) {
-}
-
-@media (min-width: 768px) and (max-width: 1199px) {
 }
 
 @media (max-width: 767px) {
@@ -118,8 +148,14 @@ img {
     .container {
       flex-direction: column;
       gap: 60px;
+
       .feat {
-        width: 100% !important;
+        width: 100%;
+
+        > div {
+          top: 0;
+          transform: rotate(0);
+        }
       }
     }
   }

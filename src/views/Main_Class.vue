@@ -65,6 +65,19 @@
             class="m-auto"
           />
           <div
+            style="
+              background: #fff;
+              width: 100%;
+              padding: 10px;
+              color: var(--main-color);
+              font-weight: bold;
+              text-align: center;
+            "
+            v-if="AllData.length === 0"
+          >
+            لا توجد مواد لعرضها
+          </div>
+          <div
             class="main_box w-48 border-1 p-2.5 rounded relative"
             v-for="(Data, index) in AllData"
             :key="Data"
@@ -315,7 +328,7 @@
               class="flex align-center justify-between font-bold"
               style="background: #fafafa; padding: 10px; border-radius: 5px"
             >
-              <div class="num">01016317083</div>
+              <div class="num">01000000000</div>
 
               <div
                 class="flex color align-center justify-between gap-2.5 bg-[#fff] p-2.5 rounded cursor-pointer"
@@ -352,7 +365,7 @@
               class="flex align-center justify-between font-bold"
               style="background: #fafafa; padding: 10px; border-radius: 5px"
             >
-              <div class="num">01555067049</div>
+              <div class="num">01500000000</div>
               <div
                 class="flex color align-center justify-between gap-2.5 bg-[#fff] p-2.5 rounded cursor-pointer"
                 @click="copyTextDad($event)"
@@ -509,7 +522,6 @@ export default {
         this.UserId = true;
       }
       this.snackbar1 = !this.UserId;
-      console.log("UserId", this.UserId);
       // }, 100);
     },
     async CheckAboutUserState() {
@@ -530,8 +542,6 @@ export default {
             // if (docSnap.data().powers === "الكل") {
             this.ShowBtnToUser = "Admin";
             // }
-          } else {
-            console.log("No such document!");
           }
         }
       } catch (error) {
@@ -906,12 +916,9 @@ export default {
       this.Class = localStorage.getItem("updateClass");
     },
     AddSubToStore() {
-      console.log(this.AllData[0].sub_name);
       let link = document.querySelectorAll(".main_box .book ");
-      let Sub_Name = this.AllData;
       for (let i = 0; i < link.length; i++) {
         link[i].querySelector("a:last-child").parentElement.onclick = () => {
-          console.log(Sub_Name[i].sub_name);
           localStorage.setItem("updateSub", this.AllData[i].sub_name);
         };
       }

@@ -1,24 +1,16 @@
 <template>
   <div class="Header">
-    <p class="element" hidden>Welcome To The New World</p>
-    <p class="element" hidden>Welcome To The New World</p>
     <div class="container flex justify-between items-center gap-2.5">
       <div class="logo">
         <router-link to="/" class="flex items-center gap-2.5">
           <img
-            src="../assets/elemam_logo.png"
-            alt="أكاديمية الإمام القانونية"
+            src="../assets/_0cb84ec6-1ab4-447d-b53f-7d7e69328fe9.jpg"
+            alt="أكاديمية القانون القانونية"
             class="h-24 rounded-full"
           />
-          <span
-            class="text-xl"
-            style="
-              font-weight: bold;
-              color: var(--main-color);
-              font-family: system-ui;
-            "
-            >أكاديمية الإمام القانونية</span
-          >
+          <span class="text-xl font-bold text-main-color"
+            >أكاديمية القانون
+          </span>
         </router-link>
       </div>
       <div class="left flex items-center gap-2.5 flex-wrap">
@@ -530,9 +522,6 @@ export default {
         }
       }
     }
-    // .mobile {
-    //   display: flex;
-    // }
   }
 }
 </style>

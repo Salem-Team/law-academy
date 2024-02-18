@@ -1,7 +1,8 @@
 <template>
-  <div class="main_Overlay" @click="close_1"></div>
+  <div class="main_Overlay" style="z-index: 1001" @click="close_1"></div>
   <div
     class="container bg-white fixed z-10 rounded p-2.5 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+    style="z-index: 1002"
   >
     <div
       class="header flex justify-between items-center mb-2.5"
@@ -20,6 +21,7 @@
         style="width: 25px"
       />
     </div>
+
     <form>
       <v-sheet class="mx-auto">
         <v-form fast-fail @submit.prevent class="flex flex-wrap gap-2.5">
@@ -45,6 +47,7 @@
               />
             </div>
           </v-text-field>
+
           <p
             class="error"
             style="
@@ -111,10 +114,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 import bcrypt from "bcryptjs";
 export default {
   name: "SignIn",
-  emits: ["close_1"],
+  emits: ["close_1", "getAdminState", "checkAboutUserState"],
   computed: {
     UserAdmin() {
       return this.$store.state.UserAdmin;
@@ -158,6 +162,53 @@ export default {
     };
   },
   methods: {
+    // async forgotPassword() {
+    //   console.log("forgotPassword");
+    //   // Check if the phone number is registered
+    //   const q = query(
+    //     collection(db, "المشرفين"),
+    //     where("phone", "==", this.Phone)
+    //   );
+    //   const querySnapshot = await getDocs(q);
+    //   const q_1 = query(
+    //     collection(db, "الطلاب"),
+    //     where("phone", "==", this.Phone)
+    //   );
+    //   const querySnapshot_1 = await getDocs(q_1);
+    //   if (querySnapshot.empty && querySnapshot_1.empty) {
+    //     this.ErrorMsg = "الرقم غير مسجل في الموقع";
+    //     return;
+    //   }
+
+    //   // Get the user's email
+    //   let docRef;
+    //   if (!querySnapshot.empty) {
+    //     docRef = doc(db, "المشرفين", querySnapshot.docs[0].id);
+    //   } else if (!querySnapshot_1.empty) {
+    //     docRef = doc(db, "الطلاب", querySnapshot_1.docs[0].id);
+    //   }
+    //   const docSnap = await getDoc(docRef);
+    //   if (docSnap.exists()) {
+    //     const email = docSnap.data().email;
+
+    //     // Send the password to the user's email
+    //     // Replace this with your own email sending logic
+    //     // For example, you can use a third-party email service or your own server-side code
+    //     const password = docSnap.data().password;
+    //     this.sendPasswordToEmail(email, password);
+
+    //     // Show a success message to the user
+    //     this.ErrorMsg = "تم إرسال كلمة المرور إلى بريدك الإلكتروني";
+    //   } else {
+    //     console.log("No such document!");
+    //   }
+    // },
+    sendPasswordToEmail(email, password) {
+      // Replace this with your own email sending logic
+      // For example, you can use a third-party email service or your own server-side code
+      console.log(`Sending password to ${email}: ${password}`);
+    },
+
     async SignIn() {
       let MainState;
       // Check About number

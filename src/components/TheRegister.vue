@@ -381,10 +381,10 @@ export default {
       Class: "",
 
       value: false,
-      Name1: "Mo",
-      Name2: "Ahmed",
-      Name3: "Salem",
-      email: "Mo@mo.com",
+      Name1: "",
+      Name2: "",
+      Name3: "",
+      email: "",
       Data: [],
       ShowAddAdmin: null,
       firstNameRules1: [
@@ -408,7 +408,7 @@ export default {
           return "يجب كتابة الإسم بصورة صحيحة";
         },
       ],
-      phone: "01012344566",
+      phone: "",
       phoneRules: [
         async (value) => {
           const q_1 = query(
@@ -427,7 +427,7 @@ export default {
           return "يجب إدخال رقم صالح";
         },
       ],
-      password: "1234",
+      password: "",
       passRules: [
         (value) => {
           if (value?.length >= 4) return true;

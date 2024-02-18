@@ -12,7 +12,7 @@
           color: var(--main-color);
           font-family: system-ui;
           text-align: center;
-          margin-bottom: 25px;
+          margin-bottom: 45px;
         "
       >
         الإشراف

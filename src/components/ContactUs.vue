@@ -53,7 +53,7 @@
             <li>
               <a
                 class="bg-[#E4405F] rounded"
-                href="https://www.facebook.com/profile.php?id=61551365201853"
+                href="https://www.instagram.com/salem_team_company"
                 style="
                   color: #fff !important;
                   display: inline-flex;
@@ -84,9 +84,7 @@
             "
           >
             <div>" جودة تستحق التجربة "</div>
-            <div>
-              تتشرف سالم تيم Salem Team بإنشاء موقع أكاديمية الإمام القانونية.
-            </div>
+            <div>تتشرف سالم تيم Salem Team بإنشاء موقع أكاديمية القانون.</div>
             <div>لا تتردد في التواصل معنا.</div>
           </div>
         </div>
@@ -114,29 +112,27 @@
               justify-content: flex-start;
             "
           >
-            تواصل مع أكاديمية الإمام القانونية علي :
+            تواصل مع أكاديمية القانون علي :
           </div>
           <li>
-            <a
-              href="https://www.facebook.com/groups/546417753365502/?ref=share"
-            >
+            <a href="#">
               <font-awesome-icon
                 :icon="['fab', 'facebook']"
                 class="text-4xl bg-[#1877f2]"
               />
-              <div>أكاديمية الإمام القانونية</div>
+              <div>أكاديمية القانون</div>
             </a>
           </li>
           <li>
-            <a href="https://www.youtube.com/channel/UCOB7iG7oVlpsYfI5BwK_i8w">
+            <a href="#">
               <font-awesome-icon
                 :icon="['fab', 'youtube']"
                 class="text-4xl bg-[#ff0000]"
               />
-              <div>أكاديمية الإمام القانونية</div>
+              <div>أكاديمية القانون</div>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a
               href="https://www.facebook.com/Dr-Mohamed-El-Emam-101533221382032/"
             >
@@ -146,14 +142,14 @@
               />
               <div>د / محمد الإمام</div>
             </a>
-          </li>
+          </li> -->
           <li>
             <a>
               <font-awesome-icon
                 :icon="['fas', 'phone']"
                 class="text-4xl bg-[#25d366]"
               />
-              <div>01016317083 - 01555067049 - 01222912524</div>
+              <div>01000000000</div>
             </a>
           </li>
         </ul>

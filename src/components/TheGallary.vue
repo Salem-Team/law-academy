@@ -191,7 +191,7 @@
               padding: 10px;
             "
           />
-          <img :src="img[currentIndex].Link" alt="" />
+          <img style="max-height: 100vh" :src="img[currentIndex].Link" alt="" />
           <font-awesome-icon
             :icon="['fas', 'chevron-right']"
             @click="nextImage"

@@ -9,7 +9,6 @@
       </div>
       <div v-for="da in data" :key="da">
         {{ da }}
-
         <span>
           {{ da.الأسئلة }}
         </span>
@@ -56,10 +55,7 @@ export default {
     async getdata() {
       const querySnapshot = await getDocs(collection(db, "كلية"));
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // if (doc.id === "كلية  عربي  فرقة أولي  قضايا") {
         this.data.push(doc.data());
-        // }
       });
     },
   },

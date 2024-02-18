@@ -781,13 +781,13 @@ export default {
         this.WrongeAnswer1 !== "" &&
         this.WrongeAnswer2 !== ""
       ) {
-        setTimeout(() => {
-          this.qu1 = "";
-          this.RightAnswer = "";
-          this.qu2 = "";
-          this.WrongeAnswer1 = "";
-          this.WrongeAnswer2 = "";
-        }, 100);
+        // setTimeout(() => {
+        //   this.qu1 = "";
+        //   this.RightAnswer = "";
+        //   this.qu2 = "";
+        //   this.WrongeAnswer1 = "";
+        //   this.WrongeAnswer2 = "";
+        // }, 100);
         this.MyResult = false;
         let AllAnswer = document.querySelectorAll(".Answer > div");
         if (AllAnswer.length !== 0) {
