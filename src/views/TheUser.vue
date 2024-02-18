@@ -1,5 +1,9 @@
 <template>
-  <div class="TheUser" style="margin-top: -20px; padding-bottom: 50px">
+  <div
+    class="TheUser"
+    id="TheUser"
+    style="margin-top: -20px; padding-bottom: 50px"
+  >
     <div class="container relative" style="padding-top: 160px">
       <div
         class="title flex items-center gap-2.5 mb-5 justify-between"
@@ -409,6 +413,9 @@ export default {
   },
 
   mounted() {
+    setTimeout(() => {
+      location.href = `${location.href}#TheUser`;
+    }, 10);
     setTimeout(() => {
       this.GetData();
       this.RankingShow = true;

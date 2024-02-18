@@ -155,6 +155,7 @@
 <script>
 export default {
   name: "TheLanding",
+
   data() {
     return {
       dialog: false,
@@ -182,7 +183,6 @@ export default {
       ],
     };
   },
-  methods: {},
 };
 </script>
 <style lang="scss" scoped>

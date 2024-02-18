@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <TheLanding />
+    <TheLanding id="Home" />
     <Features />
     <TheClasses />
     <TheGallary />
@@ -16,6 +16,7 @@ import TheGallary from "@/components/TheGallary.vue";
 
 export default {
   name: "HomeView",
+  mounted() {},
   components: {
     TheLanding,
     Features,

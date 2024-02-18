@@ -1,5 +1,9 @@
 <template>
-  <div class="TheStudents" style="margin-top: -20px; padding-bottom: 50px">
+  <div
+    class="TheStudents"
+    id="TheStudents"
+    style="margin-top: -20px; padding-bottom: 50px"
+  >
     <div class="container relative" style="padding-top: 160px">
       <div
         v-if="Info"
@@ -759,6 +763,9 @@ const db = getFirestore(app);
 export default {
   name: "TheStudents",
   mounted() {
+    setTimeout(() => {
+      location.href = `${location.href}#TheStudents`;
+    }, 10);
     this.GetData();
 
     setTimeout(() => {

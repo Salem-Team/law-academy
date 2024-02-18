@@ -261,7 +261,10 @@
         </div>
       </div>
       <section class="flex justify-between gap-2.5 mt-2.5">
-        <div class="w-48 p-2.5 text-center cursor-pointer" @click="AllTest">
+        <div
+          class="w-48 p-2.5 text-center cursor-pointer"
+          @click="CheckAboutUser_1"
+        >
           شراء اختبارات {{ Class }}
         </div>
         <div
@@ -407,6 +410,17 @@
       </template>
     </v-snackbar>
   </div>
+  <div>
+    <v-snackbar v-model="snackbar2" :timeout="timeout2">
+      {{ text2 }}
+
+      <template v-slot:actions>
+        <v-btn color="blue" variant="text" @click="snackbar2 = false">
+          إغلاق
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -479,10 +493,13 @@ export default {
       PayAllCourse: null,
       snackbar: false,
       snackbar1: false,
+      snackbar2: false,
       text: "تم نسخ الرقم للحافظة",
       text1: "عليك تسجيل الدخول حتي يتم فتح الإختبار لك",
+      text2: "عليك تسجيل الدخول حتي تستطيع شراء الكورسات",
       timeout: 3000,
       timeout1: 5000,
+      timeout2: 5000,
       Show_Open_Test: null,
       UserAdminState: null,
     };
@@ -513,6 +530,19 @@ export default {
     }, 100);
   },
   methods: {
+    CheckAboutUser_1() {
+      // setTimeout(() => {
+      // this.UserId = localStorage.getItem("userid") ? true : false;
+      if (localStorage.getItem("userid") === null) {
+        this.UserId = false;
+      } else {
+        this.UserId = true;
+        this.AllTest();
+      }
+      this.snackbar2 = !this.UserId;
+
+      // }, 100);
+    },
     CheckAboutUser() {
       // setTimeout(() => {
       // this.UserId = localStorage.getItem("userid") ? true : false;
@@ -617,124 +647,125 @@ export default {
       this.Close = true;
     },
 
-    async pay_1() {
-      const API =
-        "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RRd056UXdMQ0p1WVcxbElqb2lNVGN3TVRVeE56Z3dNUzQwTkRBek9USWlmUS5yTXlWZEl0RzUwRGJWb0R0aXlWSGFNaDBmWXVxV2R3TG4xUjVvV3ZGUXZDTTcwUzBrZ3EzTU9JY2t6dVJsVFVxVWVTbVBETXJLNXVKaTVfN0MwZWlKZw==";
-      let Data = {
-        api_key: API,
-      };
-      let request = await fetch("https://accept.paymob.com/api/auth/tokens", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Data),
-      });
+    // async pay_1() {
+    //   const API =
+    //     "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RRd056UXdMQ0p1WVcxbElqb2lNVGN3TVRVeE56Z3dNUzQwTkRBek9USWlmUS5yTXlWZEl0RzUwRGJWb0R0aXlWSGFNaDBmWXVxV2R3TG4xUjVvV3ZGUXZDTTcwUzBrZ3EzTU9JY2t6dVJsVFVxVWVTbVBETXJLNXVKaTVfN0MwZWlKZw==";
+    //   let Data = {
+    //     api_key: API,
+    //   };
+    //   let request = await fetch("https://accept.paymob.com/api/auth/tokens", {
+    //     method: "post",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(Data),
+    //   });
 
-      let response = await request.json();
+    //   let response = await request.json();
 
-      if (response && response.token) {
-        let token = response.token;
-        this.pay_2(token);
-      }
-      let token = response.token;
-      this.pay_2(token);
-    },
-    async pay_2(token) {
-      let Data = {
-        auth_token: token,
-        delivery_needed: "false",
-        amount_cents: `${this.BillPrice}00`,
-        currency: "EGP",
-        merchant_order_id:
-          Date.now() + Math.floor(Math.random() * 100000000000) + 10000000000,
-        integration_id: 4352564,
-        lock_order_when_paid: "false",
-        order_description: "Product description goes here", // وصف المنتج - قم بتحديثه
-        order_items: [],
-        items: [],
-      };
-      let request = await fetch(
-        "https://accept.paymob.com/api/ecommerce/orders",
-        {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(Data),
-        }
-      );
-      let response = await request.json();
-      let id = response.id;
-      this.pay_3(token, id);
-    },
+    //   if (response && response.token) {
+    //     let token = response.token;
+    //     this.pay_2(token);
+    //   }
+    //   let token = response.token;
+    //   this.pay_2(token);
+    // },
+    // async pay_2(token) {
+    //   let Data = {
+    //     auth_token: token,
+    //     delivery_needed: "false",
+    //     amount_cents: `${this.BillPrice}00`,
+    //     currency: "EGP",
+    //     merchant_order_id:
+    //       Date.now() + Math.floor(Math.random() * 100000000000) + 10000000000,
+    //     integration_id: 4352564,
+    //     lock_order_when_paid: "false",
+    //     order_description: "Product description goes here", // وصف المنتج - قم بتحديثه
+    //     order_items: [],
+    //     items: [],
+    //   };
+    //   let request = await fetch(
+    //     "https://accept.paymob.com/api/ecommerce/orders",
+    //     {
+    //       method: "post",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(Data),
+    //     }
+    //   );
+    //   let response = await request.json();
+    //   let id = response.id;
+    //   this.pay_3(token, id);
+    // },
 
-    async pay_3(token, id) {
-      let userid = localStorage.getItem("userid");
-      const documentRef = doc(db, "الطلاب", userid);
-      const documentSnapshot = await getDoc(documentRef);
-      const fieldName = "pay";
-      const currentFieldValue = documentSnapshot.data()[fieldName];
-      let Data = {
-        auth_token: token,
-        amount_cents: `${this.BillPrice}00`,
-        expiration: 3600,
-        order_id: id,
-        currency: "EGP",
-        integration_id: 4399813,
-        lock_order_when_paid: "false",
-        order_description: "Product description goes here", // وصف المنتج - قم بتحديثه
-        order_items: [],
-        billing_data: {
-          apartment: "803",
-          email: documentSnapshot.data().email,
-          floor: "42",
-          first_name: this.FullName,
-          street: "Ethan Land",
-          building: "8028",
-          phone_number: documentSnapshot.data().phone,
-          shipping_method: "PKG",
-          postal_code: "01898",
-          city: "Jaskolskiburgh",
-          country: "CR",
-          last_name: "Nicolas",
-          state: "Utah",
-        },
-      };
-      let request = await fetch(
-        "https://accept.paymob.com/api/acceptance/payment_keys",
-        {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(Data),
-        }
-      );
+    // async pay_3(token, id) {
+    //   let userid = localStorage.getItem("userid");
+    //   const documentRef = doc(db, "الطلاب", userid);
+    //   const documentSnapshot = await getDoc(documentRef);
+    //   const fieldName = "pay";
+    //   const currentFieldValue = documentSnapshot.data()[fieldName];
+    //   console.log("currentFieldValue", documentSnapshot.data()[fieldName]);
+    //   let Data = {
+    //     auth_token: token,
+    //     amount_cents: `${this.BillPrice}00`,
+    //     expiration: 3600,
+    //     order_id: id,
+    //     currency: "EGP",
+    //     integration_id: 4399813,
+    //     lock_order_when_paid: "false",
+    //     order_description: "Product description goes here", // وصف المنتج - قم بتحديثه
+    //     order_items: [],
+    //     billing_data: {
+    //       apartment: "803",
+    //       email: documentSnapshot.data().email,
+    //       floor: "42",
+    //       first_name: this.FullName,
+    //       street: "Ethan Land",
+    //       building: "8028",
+    //       phone_number: documentSnapshot.data().phone,
+    //       shipping_method: "PKG",
+    //       postal_code: "01898",
+    //       city: "Jaskolskiburgh",
+    //       country: "CR",
+    //       last_name: "Nicolas",
+    //       state: "Utah",
+    //     },
+    //   };
+    //   let request = await fetch(
+    //     "https://accept.paymob.com/api/acceptance/payment_keys",
+    //     {
+    //       method: "post",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(Data),
+    //     }
+    //   );
 
-      let response = await request.json();
+    //   let response = await request.json();
 
-      // تحقق مما إذا كانت الاستجابة تحتوي على الـ token
-      let TheToken = response.token;
+    //   // تحقق مما إذا كانت الاستجابة تحتوي على الـ token
+    //   let TheToken = response.token;
 
-      let newObject = {
-        BillName: this.BillName,
-        BillType: this.BillType,
-        BillLang: this.BillLang,
-        BillClass: this.BillClass,
-        BillPrice: `${this.BillPrice}00`,
-        BillItem: this.SubName,
-        Time: new Date(),
-        order_id: id,
-        success: null,
-      };
-      // إضافة الكائن الجديد إلى القيمة الحالية للحقل
-      currentFieldValue.push(newObject);
+    //   let newObject = {
+    //     BillName: this.BillName,
+    //     BillType: this.BillType,
+    //     BillLang: this.BillLang,
+    //     BillClass: this.BillClass,
+    //     BillPrice: `${this.BillPrice}00`,
+    //     BillItem: this.SubName,
+    //     Time: new Date(),
+    //     order_id: id,
+    //     success: null,
+    //   };
+    //   // إضافة الكائن الجديد إلى القيمة الحالية للحقل
+    //   currentFieldValue.push(newObject);
 
-      // تحديث المستند بالقيمة الجديدة
-      await updateDoc(documentRef, {
-        [fieldName]: currentFieldValue,
-      });
-      this.CardPayment_1(TheToken);
-    },
-    CardPayment_1(token) {
-      let iframURL = `https://accept.paymob.com/api/acceptance/iframes/806158?payment_token=${token}`;
-      location.href = iframURL;
-    },
+    //   // تحديث المستند بالقيمة الجديدة
+    //   await updateDoc(documentRef, {
+    //     [fieldName]: currentFieldValue,
+    //   });
+    //   this.CardPayment_1(TheToken);
+    // },
+    // CardPayment_1(token) {
+    //   let iframURL = `https://accept.paymob.com/api/acceptance/iframes/806158?payment_token=${token}`;
+    //   location.href = iframURL;
+    // },
     async pay1() {
       const API =
         "ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2T1RRd056UXdMQ0p1WVcxbElqb2lNVGN3TVRVeE56Z3dNUzQwTkRBek9USWlmUS5yTXlWZEl0RzUwRGJWb0R0aXlWSGFNaDBmWXVxV2R3TG4xUjVvV3ZGUXZDTTcwUzBrZ3EzTU9JY2t6dVJsVFVxVWVTbVBETXJLNXVKaTVfN0MwZWlKZw==";

@@ -68,7 +68,6 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", () => {
-      console.log(window.scrollY);
       if (
         window.scrollY >= 590 &&
         document.querySelectorAll(".feat_container .feat > div")[0]
